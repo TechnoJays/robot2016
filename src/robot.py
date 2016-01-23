@@ -3,12 +3,12 @@ from wpilib import command
 import wpilib
 
 from commands.example_command import ExampleCommand
-from subsystems.example_subsystem import ExampleSubsystem
-
+from subsystems.drivetrain import Drivetrain
 
 class MyRobot(wpilib.IterativeRobot):
-
-    example_subsystem = ExampleSubsystem()
+    # Subsystems
+    drivetrain = Drivetrain(self)
+    
     oi = None
 
     def robotInit(self):
