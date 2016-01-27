@@ -8,14 +8,14 @@ class MyRobot(wpilib.IterativeRobot):
     # Subsystems
     drivetrain = Drivetrain(self)
     
-    oi = None
+    _oi = None
 
     def robotInit(self):
         """
         This function is called upon program startup and
         should be used for any initialization code.
         """
-        self.oi = None
+        self._oi = None
         #Create the command used for the autonomous period
         #self.autonomous_command = ExampleCommand(self)
 
