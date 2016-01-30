@@ -2,26 +2,35 @@
 from wpilib import command
 import wpilib
 
+from commands.do_nothing import DoNothing
+from oi import OI
 from subsystems.drivetrain import Drivetrain
 
+
 class MyRobot(wpilib.IterativeRobot):
+
+    def autonomousInit(self):
+        #Schedule the autonomous command
+        self.autonomous_command = DoNothing(self)
+        self.autonomous_command.start()
+        return wpilib.IterativeRobot.autonomousInit(self)
+
+
+    def testInit(self):
+        return wpilib.IterativeRobot.testInit(self)
+
     # Subsystems
-    drivetrain = Drivetrain(self)
     
-    _oi = None
 
     def robotInit(self):
         """
         This function is called upon program startup and
         should be used for any initialization code.
         """
-        self._oi = None
+        self._oi = OI(self)
+        self.drivetrain = Drivetrain(self)
         #Create the command used for the autonomous period
-        #self.autonomous_command = ExampleCommand(self)
-
-    def autonomousInit(self):
-        #Schedule the autonomous command
-        self.autonomous_command.start()
+        #self.autonomous_command = ExampleCommand(self)\
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous."""

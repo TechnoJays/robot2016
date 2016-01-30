@@ -3,7 +3,8 @@ Created on Jan 23, 2016
 
 @author: Ty Strayer
 '''
-from configparser import ConfigParser
+
+from configparser import ConfigParser, SafeConfigParser
 
 from wpilib.command.subsystem import Subsystem
 from wpilib.robotdrive import RobotDrive
@@ -35,18 +36,19 @@ class Drivetrain(Subsystem):
     
     
     def __init__(self, robot, name = None):
-        super().__init__(name = name)
         self._robot = robot;
-        self._config = ConfigParser.read("../configs/drivetrain.ini")
+        self._config = ConfigParser()
+        self._config.read("drivetrain.ini")
         self._load_general_config()
+        self._init_components()
+        super().__init__(name = name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(TankDrive(self.robot, self.robot._oi))
+        self.setDefaultCommand(TankDrive(self._robot, self._robot._oi))
     
     def tankDrive(self, leftSpeed, rightSpeed):
         left = leftSpeed * self._max_speed
         right = rightSpeed * self._max_speed
-        
         self._robot_drive.tankDrive(left, right, False)
         
     def _load_general_config(self):
@@ -54,12 +56,12 @@ class Drivetrain(Subsystem):
     
     def _init_components(self):
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):
-            _left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
+            self._left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
             
         if(self._config.getboolean(Drivetrain.right_motor_section, "MOTOR_ENABLED")):
-            _right_motor = Talon(self._config.getint(self.right_motor_section, "MOTOR_CHANNEL"))
+            self._right_motor = Talon(self._config.getint(self.right_motor_section, "MOTOR_CHANNEL"))
             
-        if(_left_motor and _right_motor):
+        if(self._left_motor and self._right_motor):
             self._robot_drive = RobotDrive(self._left_motor, self._right_motor)
             self._robot_drive.setSafetyEnabled(False)
             self._robot_drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,

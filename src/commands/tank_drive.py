@@ -6,8 +6,7 @@ Created on Jan 23, 2016
 
 from wpilib.command.command import Command
 
-from oi import JoystickAxis
-from subsystems.drivetrain import Drivetrain
+from oi import JoystickAxis, UserController
 
 
 class TankDrive(Command):
@@ -24,9 +23,9 @@ class TankDrive(Command):
         Constructor
         '''
         self._oi = oi
-        self.requires(Drivetrain)
         super().__init__(name, timeout)
         self.robot = robot;
+        self.requires(robot.drivetrain)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -34,8 +33,8 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        left_track = self._oi.get_axis(JoystickAxis.LEFTY)
-        right_track = self._oi.get_axis(JoystickAxis.RIGHTY)
+        left_track = self._oi.get_axis(UserController.DRIVER, JoystickAxis.LEFTY)
+        right_track = self._oi.get_axis(UserController.DRIVER, JoystickAxis.RIGHTY)
         self.robot.drivetrain.tankDrive(left_track, right_track)
         return Command.execute(self)
 

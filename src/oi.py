@@ -1,5 +1,5 @@
 
-from configparser import ConfigParser
+from configparser import ConfigParser, SafeConfigParser
 
 import wpilib
 
@@ -27,7 +27,7 @@ class JoystickButtons(object):
     BACK = 9
     START = 10
 
-class UserControllers(object):
+class UserController(object):
     """Enumerates the controllers."""
     DRIVER = 0
     SCORING = 1
@@ -40,17 +40,18 @@ class OI:
     """
     _config=None
     
-    _controllers = []
+    _controllers = [2]
     
     def __init__(self, robot):
         self.robot = robot
         
-        _config = ConfigParser.read("../configs/joysticks.ini")
+        self._config = ConfigParser()
+        self._config.read("joysticks.ini")
         
-        self._init_joystick_binding(_config)
+        self._init_joystick_binding()
         
         for i in range(2):
-            _controllers = self._init_joystick(_config, i)
+            self._controllers.append(self._init_joystick(i))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
@@ -110,36 +111,36 @@ class OI:
                 value = 0.0
         else:
             config_section = "JoyConfig" + str(user)
-            dead_zone = self._config.getint(config_section, "DEAD_ZONE")
+            dead_zone = self._config.getfloat(config_section, "DEAD_ZONE")
             if abs(value) < dead_zone:
                 value = 0.0
         return value
     
-    def _init_joystick(self, config, driver):
+    def _init_joystick(self, driver):
         config_section = "JoyConfig" + str(driver)
-        stick = wpilib.Joystick(config.getint(config_section, "PORT"),
-                                config.getint(config_section, "AXES"),
-                                config.getint(config_section, "BUTTONS"))
+        stick = wpilib.Joystick(self._config.getint(config_section, "PORT"),
+                                self._config.getint(config_section, "AXES"),
+                                self._config.getint(config_section, "BUTTONS"))
         return stick
         
-    def _init_joystick_binding(self, config):
+    def _init_joystick_binding(self):
         axisBindingSection = "AxisBindings"
-        JoystickAxis.LEFTX = config.getint(axisBindingSection,"LEFTX")
-        JoystickAxis.LEFTY = config.getint(axisBindingSection,"LEFTY")
-        JoystickAxis.RIGHTX = config.getint(axisBindingSection,"RIGHTX")
-        JoystickAxis.RIGHTY = config.getint(axisBindingSection,"RIGHTY")
-        JoystickAxis.DPADX = config.getint(axisBindingSection,"DPADX")
-        JoystickAxis.DPADY = config.getint(axisBindingSection,"DPADY")
+        JoystickAxis.LEFTX = self._config.getint(axisBindingSection,"LEFTX")
+        JoystickAxis.LEFTY = self._config.getint(axisBindingSection,"LEFTY")
+        JoystickAxis.RIGHTX = self._config.getint(axisBindingSection,"RIGHTX")
+        JoystickAxis.RIGHTY = self._config.getint(axisBindingSection,"RIGHTY")
+        JoystickAxis.DPADX = self._config.getint(axisBindingSection,"DPADX")
+        JoystickAxis.DPADY = self._config.getint(axisBindingSection,"DPADY")
         
         buttonBindingSection = "ButtonBindings"
-        JoystickButtons.X = config.getint(buttonBindingSection, "X")
-        JoystickButtons.A = config.getint(buttonBindingSection, "A")
-        JoystickButtons.B = config.getint(buttonBindingSection, "B")
-        JoystickButtons.Y = config.getint(buttonBindingSection, "Y")
-        JoystickButtons.LEFTBUMPER = config.getint(buttonBindingSection, "LEFTBUMPER")
-        JoystickButtons.RIGHTBUMPER = config.getint(buttonBindingSection, "RIGHTBUMPER")
-        JoystickButtons.LEFTTRIGGER = config.getint(buttonBindingSection, "LEFTTRIGGER")
-        JoystickButtons.RIGHTTRIGGER = config.getint(buttonBindingSection, "RIGHTTRIGGER")
-        JoystickButtons.BACK = config.getint(buttonBindingSection, "BACK")
-        JoystickButtons.START = config.getint(buttonBindingSection, "START")
+        JoystickButtons.X = self._config.getint(buttonBindingSection, "X")
+        JoystickButtons.A = self._config.getint(buttonBindingSection, "A")
+        JoystickButtons.B = self._config.getint(buttonBindingSection, "B")
+        JoystickButtons.Y = self._config.getint(buttonBindingSection, "Y")
+        JoystickButtons.LEFTBUMPER = self._config.getint(buttonBindingSection, "LEFTBUMPER")
+        JoystickButtons.RIGHTBUMPER = self._config.getint(buttonBindingSection, "RIGHTBUMPER")
+        JoystickButtons.LEFTTRIGGER = self._config.getint(buttonBindingSection, "LEFTTRIGGER")
+        JoystickButtons.RIGHTTRIGGER = self._config.getint(buttonBindingSection, "RIGHTTRIGGER")
+        JoystickButtons.BACK = self._config.getint(buttonBindingSection, "BACK")
+        JoystickButtons.START = self._config.getint(buttonBindingSection, "START")
     
