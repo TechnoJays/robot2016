@@ -1,5 +1,6 @@
 
-from configparser import ConfigParser, SafeConfigParser
+
+import configparser
 
 import wpilib
 
@@ -45,7 +46,7 @@ class OI:
     def __init__(self, robot):
         self.robot = robot
         
-        self._config = ConfigParser()
+        self._config = configparser.SafeConfigParser()
         self._config.read("joysticks.ini")
         
         self._init_joystick_binding()

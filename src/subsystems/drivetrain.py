@@ -4,7 +4,7 @@ Created on Jan 23, 2016
 @author: Ty Strayer
 '''
 
-from configparser import ConfigParser, SafeConfigParser
+import configparser
 
 from wpilib.command.subsystem import Subsystem
 from wpilib.robotdrive import RobotDrive
@@ -37,7 +37,7 @@ class Drivetrain(Subsystem):
     
     def __init__(self, robot, name = None):
         self._robot = robot;
-        self._config = ConfigParser()
+        self._config = configparser.SafeConfigParser()
         self._config.read("drivetrain.ini")
         self._load_general_config()
         self._init_components()
