@@ -5,6 +5,7 @@ Created on Jan 23, 2016
 '''
 
 import configparser
+import os
 
 from wpilib.command.subsystem import Subsystem
 from wpilib.robotdrive import RobotDrive
@@ -37,8 +38,9 @@ class Drivetrain(Subsystem):
     
     def __init__(self, robot, name = None):
         self._robot = robot;
-        self._config = configparser.SafeConfigParser()
-        self._config.read("drivetrain.ini")
+        self._config = configparser.ConfigParser()
+        my_file = (os.path.join(os.getcwd(), 'drivetrain.ini'))
+        self._config.read(my_file)
         self._load_general_config()
         self._init_components()
         super().__init__(name = name)
@@ -52,7 +54,7 @@ class Drivetrain(Subsystem):
         self._robot_drive.tankDrive(left, right, False)
         
     def _load_general_config(self):
-        self._max_speed = self._config.getint(self.general_section, "MAX_SPEED")
+        self._max_speed = self._config.getint('General', "MAX_SPEED")
     
     def _init_components(self):
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):

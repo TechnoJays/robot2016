@@ -1,7 +1,7 @@
 
 
 import configparser
-
+import os
 import wpilib
 
 
@@ -41,13 +41,14 @@ class OI:
     """
     _config=None
     
-    _controllers = [2]
+    _controllers = []
     
     def __init__(self, robot):
         self.robot = robot
         
-        self._config = configparser.SafeConfigParser()
-        self._config.read("joysticks.ini")
+        my_file = (os.path.join(os.getcwd(), 'joysticks.ini'))
+        self._config = configparser.ConfigParser()
+        self._config.read(my_file)
         
         self._init_joystick_binding()
         
@@ -93,7 +94,6 @@ class OI:
         """
         controller = self._controllers[user]
         value = 0.0
-        
         if axis == JoystickAxis.DPADX:
             value = controller.getPOV()
             if value == 90:
@@ -113,8 +113,10 @@ class OI:
         else:
             config_section = "JoyConfig" + str(user)
             dead_zone = self._config.getfloat(config_section, "DEAD_ZONE")
+            value = controller.getRawAxis(axis)
             if abs(value) < dead_zone:
                 value = 0.0
+                
         return value
     
     def _init_joystick(self, driver):

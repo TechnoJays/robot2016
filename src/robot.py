@@ -13,20 +13,23 @@ class MyRobot(wpilib.IterativeRobot):
         #Schedule the autonomous command
         self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
-        return wpilib.IterativeRobot.autonomousInit(self)
-
 
     def testInit(self):
-        return wpilib.IterativeRobot.testInit(self)
+        pass
 
     # Subsystems
     
+    def teleopInit(self):
+        self.teleopInitialized = True
+        
+    def disabledInit(self):
+        self.disabledInitialized = True
 
     def robotInit(self):
         """
         This function is called upon program startup and
         should be used for any initialization code.
-        """
+        """        
         self._oi = OI(self)
         self.drivetrain = Drivetrain(self)
         #Create the command used for the autonomous period
