@@ -40,18 +40,16 @@ class OI:
     interface to the commands and command groups that allow control of the robot.
     """
     _config=None
-    
+
     _controllers = []
-    
-    def __init__(self, robot):
+
+    def __init__(self, robot, configfile = 'configs/joysticks.ini'):
         self.robot = robot
-        
-        my_file = (os.path.join(os.getcwd(), 'joysticks.ini'))
         self._config = configparser.ConfigParser()
-        self._config.read(my_file)
-        
+        self._config.read(os.path.join(os.getcwd(), configfile))
+
         self._init_joystick_binding()
-        
+
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
 
@@ -61,34 +59,34 @@ class OI:
         #number it is.
         #stick = wpilib.Joystick(port)
         #button = buttons.JoystickButton(stick, button_number)
-    
+
         #There are a few additional built-in buttons you can use. Additionally, by
         #subclassing Button you can create custom triggers and bind those to
         #commands the same as any other Button
-    
+
         #TRIGGERING COMMANDS WITH BUTTONS
         #Once you have a button, it's trivial to bind it to a button in one of
         #three ways;
-    
+
         #Start the command when the button is pressed and let it run the command
         #until it is finished as determined by it's isFinished method.
         #button.whenPressed(ExampleCommand())
-    
+
         #Run the command while the button is being held down and interrupt it
         #once the button is released
         #button.whileHeld(ExampleCommand())
-    
+
         #Start the command when the button is released and let it run the command
         #until it is finished as determined by it's isFinished method.
         #button.whenReleased(ExampleCommand())
-        
+
     def get_axis(self, user, axis):
         """Read axis value for specified controller/axis.
-        
+
         Args:
             user: Controller ID to read from
             axis: Axis ID to read from.
-            
+
         Return:
             Current position for the specified axis. (Range [-1.0, 1.0])
         """
@@ -116,16 +114,16 @@ class OI:
             value = controller.getRawAxis(axis)
             if abs(value) < dead_zone:
                 value = 0.0
-                
+
         return value
-    
+
     def _init_joystick(self, driver):
         config_section = "JoyConfig" + str(driver)
         stick = wpilib.Joystick(self._config.getint(config_section, "PORT"),
                                 self._config.getint(config_section, "AXES"),
                                 self._config.getint(config_section, "BUTTONS"))
         return stick
-        
+
     def _init_joystick_binding(self):
         axisBindingSection = "AxisBindings"
         JoystickAxis.LEFTX = self._config.getint(axisBindingSection,"LEFTX")
@@ -134,7 +132,7 @@ class OI:
         JoystickAxis.RIGHTY = self._config.getint(axisBindingSection,"RIGHTY")
         JoystickAxis.DPADX = self._config.getint(axisBindingSection,"DPADX")
         JoystickAxis.DPADY = self._config.getint(axisBindingSection,"DPADY")
-        
+
         buttonBindingSection = "ButtonBindings"
         JoystickButtons.X = self._config.getint(buttonBindingSection, "X")
         JoystickButtons.A = self._config.getint(buttonBindingSection, "A")
@@ -146,4 +144,3 @@ class OI:
         JoystickButtons.RIGHTTRIGGER = self._config.getint(buttonBindingSection, "RIGHTTRIGGER")
         JoystickButtons.BACK = self._config.getint(buttonBindingSection, "BACK")
         JoystickButtons.START = self._config.getint(buttonBindingSection, "START")
-    
