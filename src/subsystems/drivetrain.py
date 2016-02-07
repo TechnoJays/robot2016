@@ -54,7 +54,7 @@ class Drivetrain(Subsystem):
         self._robot_drive.tankDrive(left, right, False)
 
     def _load_general_config(self):
-        self._max_speed = self._config.getint('General', "MAX_SPEED")
+        self._max_speed = self._config.getfloat('General', "MAX_SPEED")
 
     def _init_components(self):
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):
