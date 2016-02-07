@@ -36,11 +36,10 @@ class Drivetrain(Subsystem):
     _robot_drive = None
 
 
-    def __init__(self, robot, name = None):
+    def __init__(self, robot, name = None, configfile = 'configs/drivetrain.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
-        my_file = (os.path.join(os.getcwd(), 'configs/drivetrain.ini'))
-        self._config.read(my_file)
+        self._config.read(os.path.join(os.getcwd(), configfile))
         self._load_general_config()
         self._init_components()
         super().__init__(name = name)

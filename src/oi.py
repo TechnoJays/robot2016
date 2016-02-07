@@ -43,12 +43,10 @@ class OI:
 
     _controllers = []
 
-    def __init__(self, robot):
+    def __init__(self, robot, configfile = 'configs/joysticks.ini'):
         self.robot = robot
-
-        my_file = (os.path.join(os.getcwd(), 'configs/joysticks.ini'))
         self._config = configparser.ConfigParser()
-        self._config.read(my_file)
+        self._config.read(os.path.join(os.getcwd(), configfile))
 
         self._init_joystick_binding()
 
