@@ -15,7 +15,6 @@ class TankDrive(Command):
     '''
     
     _oi = None
-    _tank_drive_enabled = False
     _config = None
     
     def __init__(self, robot, oi, name=None, timeout=None):
