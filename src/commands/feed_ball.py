@@ -5,15 +5,18 @@ Created on Feb 6, 2016
 '''
 from wpilib.command.command import Command
 
+from oi import JoystickAxis, UserController
 
-class FeedIn(Command):
+
+class FeedBall(Command):
     
     def __init__(self, robot, name=None, timeout=None):
         '''
         Constructor
         '''
         super().__init__(name, timeout)
-        pass
+        self.robot = robot
+        self.requires(robot.feeder)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -21,7 +24,8 @@ class FeedIn(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        return Command.execute(self)
+        speed = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY)
+        self.robot.feeder.spinFeeder(speed)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
