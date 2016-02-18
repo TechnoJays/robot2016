@@ -1,4 +1,3 @@
-
 from wpilib import command
 import wpilib
 
