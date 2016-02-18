@@ -43,7 +43,7 @@ class OI:
 
     _controllers = []
 
-    def __init__(self, robot, configfile = 'configs/joysticks.ini'):
+    def __init__(self, robot, configfile = 'joysticks.ini'):
         self.robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))
