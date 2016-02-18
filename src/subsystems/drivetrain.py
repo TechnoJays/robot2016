@@ -41,7 +41,6 @@ class Drivetrain(Subsystem):
     _robot_drive = None
     
     _encoder = None
-    _encoder_enabled = False
     _encoder_a_channel = None
     _encoder_b_channel = None
     _encoder_reversed = None
@@ -50,7 +49,6 @@ class Drivetrain(Subsystem):
     
     _gyro = None
     _gyro_angle = None
-    _gyro_enabled = False
     _gyro_channel = None
     _gyro_sensitivity = None
 
@@ -65,7 +63,7 @@ class Drivetrain(Subsystem):
     def initDefaultCommand(self):
         self.setDefaultCommand(TankDrive(self._robot, self._robot._oi))
 
-    def tankDrive(self, leftSpeed, rightSpeed):
+    def tank_drive(self, leftSpeed, rightSpeed):
         left = leftSpeed * self._max_speed
         right = rightSpeed * self._max_speed
         self._robot_drive.tankDrive(left, right, False)
@@ -73,28 +71,28 @@ class Drivetrain(Subsystem):
     def _load_general_config(self):
         self._max_speed = self._config.getfloat('General', "MAX_SPEED")
         
-    def getEncoderValue(self):
+    def get_encoder_value(self):
         if(self._encoder):
             self._encoder_count = self._encoder.get()
         return self._encoder_count
     
-    def resetEncoderValue(self):
+    def reset_encoder_value(self):
         if(self._encoder):
             self._encoder_count = 0
         return self._encoder_count
     
-    def getGyroAngle(self):
+    def get_gyro_angle(self):
         if (self._gyro):
             self._gyro_angle = self._gyro.getAngle()
         return self._gyro_angle
     
-    def resetGyroAngle(self):
+    def reset_gyro_angle(self):
         if (self._gyro):
             self._gyro.reset()
             self._gyro_angle = self._gyro.getAngle()
         return self._gyro_angle
     
-    def arcadeDrive(self, linearDistance, turnAngle):
+    def arcade_drive(self, linearDistance, turnAngle):
         if(self._robot_drive):
             self._robot_drive.arcadeDrive(linearDistance, turnAngle)
         
@@ -105,23 +103,16 @@ class Drivetrain(Subsystem):
             self._encoder_reversed = self._config.getboolean(self.encoder_section, "ENCODER_REVERSED")
             self._encoder_type = self._config.getint(self.encoder_section, "ENCODER_TYPE")
             if(self._encoder_a_channel and self._encoder_b_channel and self._encoder_reversed and self._encoder_type):
-                self._encoder_enabled = True
-            
-        if(self._encoder_enabled):
-            self._encoder = Encoder(self._encoder_a_channel, self._encoder_b_channel, self._encoder_reversed, self._encoder_type)
+                self._encoder = Encoder(self._encoder_a_channel, self._encoder_b_channel, self._encoder_reversed, self._encoder_type)
         
-        #todo: initialize gyro
         if(self._config.getboolean(Drivetrain.gyro_section, "GYRO_ENABLED")):
             self._gyro_channel = self._config.getint(self.gyro_section, "GYRO_CHANNEL")
-            self._gyro_sensitivity = self._config.getint(self.gyro_section, "GYRO_SENSITIVITY")
-            if (self._gyro_channel and self._gyro_sensitivity):
-                self._gyro_enabled = True
+            self._gyro_sensitivity = self._config.getfloat(self.gyro_section, "GYRO_SENSITIVITY")
+            if (self._gyro_channel):
+                self._gyro = AnalogGyro(self._gyro_channel)
+                if (self._gyro and self._gyro_sensitivity):
+                    self._gyro.setSensitivity(self._gyro_sensitivity)
                 
-        if (self._gyro_enabled):
-            self._gyro = AnalogGyro(self._gyro_channel)
-            if (self._gyro):
-                self._gyro.setSensitivity(self._gyro_sensitivity)
-        
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):
             self._left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
 
