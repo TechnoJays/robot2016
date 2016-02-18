@@ -83,14 +83,15 @@ class Drivetrain(Subsystem):
             self._encoder_count = 0
         return self._encoder_count
     
-    def getGyroValue(self):
+    def getGyroAngle(self):
         if (self._gyro):
             self._gyro_angle = self._gyro.getAngle()
         return self._gyro_angle
     
     def resetGyroAngle(self):
         if (self._gyro):
-            self._gyro_angle = 0
+            self._gyro.reset()
+            self._gyro_angle = self._gyro.getAngle()
         return self._gyro_angle
     
     def arcadeDrive(self, linearDistance, turnAngle):
