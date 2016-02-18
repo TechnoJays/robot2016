@@ -5,13 +5,14 @@ import wpilib
 from commands.do_nothing import DoNothing
 from oi import OI
 from subsystems.drivetrain import Drivetrain
+from subsystems.feeder import Feeder
+from subsystems.scaling_arm import ScalingArm
 
 
 class MyRobot(wpilib.IterativeRobot):
 
     def autonomousInit(self):
         #Schedule the autonomous command
-        self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
 
     def testInit(self):
@@ -30,8 +31,12 @@ class MyRobot(wpilib.IterativeRobot):
         This function is called upon program startup and
         should be used for any initialization code.
         """        
-        self._oi = OI(self)
+        self.oi = OI(self)
         self.drivetrain = Drivetrain(self)
+        self.feeder = Feeder(self)
+        self.arm = ScalingArm(self)
+        
+        self.autonomous_command = DoNothing(self)
         #Create the command used for the autonomous period
         #self.autonomous_command = ExampleCommand(self)\
 
