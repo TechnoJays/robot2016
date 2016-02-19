@@ -63,7 +63,7 @@ class Drivetrain(Subsystem):
     def initDefaultCommand(self):
         self.setDefaultCommand(TankDrive(self._robot, self._robot._oi))
 
-    def tank_drive(self, leftSpeed, rightSpeed):
+    def tankDrive(self, leftSpeed, rightSpeed):
         left = leftSpeed * self._max_speed
         right = rightSpeed * self._max_speed
         self._robot_drive.tankDrive(left, right, False)
