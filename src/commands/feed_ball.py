@@ -33,8 +33,8 @@ class FeedBall(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        pass
+        self.robot.feeder.spinFeeder(0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        pass
+        self.end()
