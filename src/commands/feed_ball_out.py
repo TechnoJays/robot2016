@@ -10,7 +10,6 @@ from wpilib.command.command import Command
 
 class FeedBallOut(Command):
     
-    _first_execute = True
     _feed_out_time_seconds = 2.0
     _time_stamp = 0
     _feeder_speed = 0.5
@@ -28,13 +27,10 @@ class FeedBallOut(Command):
 
     def initialize(self):
         """Called before the Command is run for the first time."""
-        return Command.initialize(self)
+        self._time_stamp = time.time()
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        if self._first_execute:
-            self._time_stamp = time.time()
-            self._first_execute = False
         self.robot.feeder.spinFeeder(self._feeder_speed)
 
     def isFinished(self):
@@ -43,9 +39,9 @@ class FeedBallOut(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self._first_execute = True
+        self.robot.feeder.spinFeeder(0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        self._first_execute = True
+        self.end()
     
