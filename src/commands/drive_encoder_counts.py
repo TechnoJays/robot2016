@@ -5,12 +5,13 @@ class DriveEncoderCounts(Command):
     '''
     classdocs
     '''
-    _speed_ratio = None
+    _speed = None
     _encoder_threshold = None
     _encoder_change = None
     _target_position = None
+    _ramp_threshold = None
 
-    def __init__(self, robot, encoder_change, speed_ratio=1.0, threshold=10, name=None, timeout=None):
+    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=None):
         '''
         Constructor
         '''
@@ -18,8 +19,9 @@ class DriveEncoderCounts(Command):
         self.robot = robot;
         self.requires(robot.drivetrain)
         self._encoder_change = encoder_change
-        self._speed_ratio = speed_ratio
+        self._speed = speed
         self._encoder_threshold = threshold
+        self._ramp_threshold = ramp_threshold
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -33,13 +35,15 @@ class DriveEncoderCounts(Command):
         """Called repeatedly when this Command is scheduled to run"""
         # Get encoder count
         current = self.robot.drivetrain.get_encoder_value()
+        distance_left = self._target_position - current
         # Determine direction using target and current encoder values
-        if (self._target_position - current) <= 0:
+        if (distance_left) >= 0:
             direction = 1.0
         else:
             direction = -1.0
-        # TODO: implement speed ramp/step so that we don't overshoot target
-        linear_drive_amount = self._speed_ratio * direction
+        linear_drive_amount = self._speed * direction
+        if (distance_left < self._ramp_threshold):
+            linear_drive_amount = linear_drive_amount * (distance_left) / self._ramp_threshold
         # Set drivetrain using speed and direction
         self.robot.drivetrain.arcade_drive(linear_drive_amount, 0.0)
         return Command.execute(self)

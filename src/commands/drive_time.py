@@ -5,21 +5,23 @@ class DriveTime(Command):
     '''
     classdocs
     '''
+    _stopwatch = None
     _start_time = None
     _duration = None
     _speed = None
-    _stopwatch = None
+    _ramp_threshold = None
 
-    def __init__(self, robot, duration, speed, name=None, timeout=None):
+    def __init__(self, robot, duration, speed, ramp_threshold, name=None, timeout=None):
         '''
         Constructor
         '''
         super().__init__(name, timeout)
         self.robot = robot;
         self.requires(robot.drivetrain)
+        self._stopwatch = Stopwatch()
         self._duration = duration
         self._speed = speed
-        self._stopwatch = Stopwatch()
+        self._ramp_threshold = ramp_threshold
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -29,8 +31,11 @@ class DriveTime(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        # TODO: implement speed ramp/step so that we don't overshoot target
-        self.robot.drivetrain.arcade_drive(self._speed, 0.0)
+        speed = self._speed
+        time_left = self._duration - self._stopwatch.elapsed_time_in_secs()
+        if (time_left < self._ramp_threshold):
+            speed = speed * time_left / self._ramp_threshold
+        self.robot.drivetrain.arcade_drive(speed, 0.0)
         return Command.execute(self)
 
     def isFinished(self):
