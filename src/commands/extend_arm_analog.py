@@ -4,10 +4,11 @@ Created on Feb 19, 2016
 @author: tylerstrayer
 '''
 from wpilib.command.command import Command
+
 from oi import UserController, JoystickAxis
 
 
-class MoveArmAnalog(Command):
+class ExtendArmAnalog(Command):    
 
     def __init__(self, robot, retract_stop_count, extend_stop_count = 0, name=None, timeout=None):
         '''
@@ -25,12 +26,12 @@ class MoveArmAnalog(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTY);
-        arm_count = self._robot.arm.getArmCount()
-        if self._extend_stop_count <= arm_count <= self._retract_stop_count:
-            self._robot.arm.moveArm(move_speed)
+        move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTX);
+        winch_count = self._robot.arm.getWinchCount()
+        if self._extend_stop_count >= winch_count >= self._retract_stop_count:
+            self._robot.arm.moveWinch(move_speed)
         else:
-            self._robot.arm.moveArm(0)
+            self._robot.arm.moveWinch(0)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
@@ -38,7 +39,7 @@ class MoveArmAnalog(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self._robot.arm.moveArm(0)
+        self._robot.arm.moveWinch(0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
