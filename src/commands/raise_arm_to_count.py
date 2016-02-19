@@ -6,14 +6,17 @@ Created on Feb 6, 2016
 from wpilib.command.command import Command
 
 
-class RaiseArm(Command):
-    
-    def __init__(self, robot, name=None, timeout=None):
+class RaiseArmToCount(Command):
+
+    def __init__(self, robot, raise_speed, stop_count = 0, name=None, timeout=None):
         '''
         Constructor
         '''
         super().__init__(name, timeout)
-        pass
+        self._robot = robot
+        self._raise_speed = raise_speed
+        self._stop_count = stop_count
+        self.requires(robot.arm)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -21,17 +24,16 @@ class RaiseArm(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        return Command.execute(self)
+        self._robot.arm.moveArm(self._raise_speed)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return False
+        return self._robot.arm.getArmCount() <= self._stop_count
 
     def end(self):
         """Called once after isFinished returns true"""
-        pass
+        self._robot.arm.moveArm(0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
-        pass
-   
+        self.end()
