@@ -7,17 +7,15 @@ from wpilib.command.command import Command
 
 class PickUpBall(Command):
     
-    _feeder_speed = 0.5
-    
-    def __init__(self, robot, feeder_speed, name=None, timeout=None):
+    def __init__(self, robot, feeder_speed = 0.5, name=None, timeout=None):
         '''
         Constructor
         '''
         super().__init__(name, timeout)
         # Read feeder_speed from config
         self.robot = robot
-        self._feeder_speed = 0.5
-        self.requires(robot.feeder.Class)
+        self._feeder_speed = feeder_speed
+        self.requires(robot.feeder)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
