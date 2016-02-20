@@ -19,7 +19,7 @@ class Arm(Subsystem):
     _encoder = None
     _encoder_value = 0
     
-    def __init__(self, robot, name=None, configfile = 'configs/arm.ini'):
+    def __init__(self, robot, name=None, configfile = 'configs/subsystems.ini'):
         self._robot = robot;
         self._config_file = configfile
         self._init_components()
@@ -48,9 +48,9 @@ class Arm(Subsystem):
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._config_file))
         
-        RIGHT_MOTOR_SECTION = "RightMotor"
-        LEFT_MOTOR_SECTION = "LeftMotor"
-        ENCODER_SECTION = "Encoder"
+        RIGHT_MOTOR_SECTION = "ArmRightMotor"
+        LEFT_MOTOR_SECTION = "ArmLeftMotor"
+        ENCODER_SECTION = "ArmEncoder"
         ENABLED = "ENABLED"
         CHANNEL = "CHANNEL"
         INVERTED = "INVERTED"
