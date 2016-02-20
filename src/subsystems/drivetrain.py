@@ -36,8 +36,8 @@ class Drivetrain(Subsystem):
     _robot = None
     _config = None
 
-    _left_motor = None
-    _right_motor = None
+    left_motor = None
+    right_motor = None
     _robot_drive = None
     
     _encoder = None
@@ -114,13 +114,13 @@ class Drivetrain(Subsystem):
                     self._gyro.setSensitivity(self._gyro_sensitivity)
                 
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):
-            self._left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
+            self.left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
 
         if(self._config.getboolean(Drivetrain.right_motor_section, "MOTOR_ENABLED")):
-            self._right_motor = Talon(self._config.getint(self.right_motor_section, "MOTOR_CHANNEL"))
+            self.right_motor = Talon(self._config.getint(self.right_motor_section, "MOTOR_CHANNEL"))
 
-        if(self._left_motor and self._right_motor):
-            self._robot_drive = RobotDrive(self._left_motor, self._right_motor)
+        if(self.left_motor and self.right_motor):
+            self._robot_drive = RobotDrive(self.left_motor, self.right_motor)
             self._robot_drive.setSafetyEnabled(False)
             self._robot_drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,
                                                self._config.getboolean(Drivetrain.left_motor_section,
