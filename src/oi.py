@@ -3,7 +3,8 @@
 import configparser
 import os
 import wpilib
-
+from wpilib.smartdashboard import SmartDashboard
+from commands import *
 
 class JoystickAxis(object):
     """Enumerates joystick axis."""
@@ -52,6 +53,8 @@ class OI:
 
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
+
+        self._create_smartdashboard_buttons()
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
@@ -116,6 +119,28 @@ class OI:
                 value = 0.0
 
         return value
+
+    def _create_smartdashboard_buttons(self):
+        SmartDashboard.putData("DriveEncoderCounts",
+            commands.drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
+        SmartDashboard.putData("DriveTime",
+            commands.drive_time.DriveTime(self.robot, 2.0, 1.0, 0.3))
+        SmartDashboard.putData("ExtendHookToCount",
+            commands.extend_hook_to_count.ExtendHookToCount(self.robot, 1.0, 50))
+        SmartDashboard.putData("FeedBallOut",
+            commands.feed_ball_out.FeedBallOut(self.robot, 1.0, 1.0))
+        SmartDashboard.putData("LowerArmToCount",
+            commands.lower_arm_to_count.LowerArm(self.robot, 0, 1.0))
+        SmartDashboard.putData("PickUpBall",
+            commands.pick_up_ball.PickUpBall(self.robot, 0.5))
+        SmartDashboard.putData("RaiseArmToCount",
+            commands.raise_arm_to_count.RaiseArmToCount(self.robot, 1.0, 50))
+        SmartDashboard.putData("RetractHookToCount",
+            commands.retract_hook_to_count.RetractHookToCount(self.robot, 1.0, 0))
+        SmartDashboard.putData("TurnDegrees",
+            commands.turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
+        SmartDashboard.putData("TurnTime",
+            commands.turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
 
     def _init_joystick(self, driver):
         config_section = "JoyConfig" + str(driver)
