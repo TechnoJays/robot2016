@@ -12,6 +12,7 @@ from wpilib.encoder import Encoder
 from wpilib.robotdrive import RobotDrive
 from wpilib.talon import Talon
 from wpilib.analoggyro import AnalogGyro
+from wpilib.smartdashboard import SmartDashboard
 
 from commands.tank_drive import TankDrive
 
@@ -21,7 +22,7 @@ class Drivetrain(Subsystem):
     classdocs
     '''
     # 2 Talon controllers
-    # 
+    #
 
     # Config file section names
     left_motor_section = "LeftMotor"
@@ -39,14 +40,14 @@ class Drivetrain(Subsystem):
     left_motor = None
     right_motor = None
     _robot_drive = None
-    
+
     _encoder = None
     _encoder_a_channel = None
     _encoder_b_channel = None
     _encoder_reversed = None
     _encoder_type = None
     _encoder_count = 0
-    
+
     _gyro = None
     _gyro_angle = None
     _gyro_channel = None
@@ -58,6 +59,9 @@ class Drivetrain(Subsystem):
         self._config.read(os.path.join(os.getcwd(), configfile))
         self._load_general_config()
         self._init_components()
+        self._update_smartdashboard_sensors()
+        self._update_smartdashboard_tank_drive(0.0, 0.0)
+        self._update_smartdashboard_arcade_drive(0.0, 0.0)
         super().__init__(name = name)
 
     def initDefaultCommand(self):
@@ -67,35 +71,57 @@ class Drivetrain(Subsystem):
         left = leftSpeed * self._max_speed
         right = rightSpeed * self._max_speed
         self._robot_drive.tankDrive(left, right, False)
+        self._update_smartdashboard_tank_drive(leftSpeed, rightSpeed)
+        self.get_gyro_angle()
+        self.get_encoder_value()
+        self._update_smartdashboard_sensors()
+
+    def _update_smartdashboard_tank_drive(self, left, right):
+        SmartDashboard.putNumber("Drivetrain Left Speed", left)
+        SmartDashboard.putNumber("Drivetrain Right Speed", right)
 
     def _load_general_config(self):
         self._max_speed = self._config.getfloat('General', "MAX_SPEED")
-        
+
     def get_encoder_value(self):
         if(self._encoder):
             self._encoder_count = self._encoder.get()
         return self._encoder_count
-    
+
     def reset_encoder_value(self):
         if(self._encoder):
             self._encoder_count = 0
+        self._update_smartdashboard_sensors()
         return self._encoder_count
-    
+
     def get_gyro_angle(self):
         if (self._gyro):
             self._gyro_angle = self._gyro.getAngle()
         return self._gyro_angle
-    
+
     def reset_gyro_angle(self):
         if (self._gyro):
             self._gyro.reset()
             self._gyro_angle = self._gyro.getAngle()
+        self._update_smartdashboard_sensors()
         return self._gyro_angle
-    
+
     def arcade_drive(self, linearDistance, turnAngle):
         if(self._robot_drive):
             self._robot_drive.arcadeDrive(linearDistance, turnAngle)
-        
+        self._update_smartdashboard_arcade_drive(linearDistance, turnAngle)
+        self.get_gyro_angle()
+        self.get_encoder_value()
+        self._update_smartdashboard_sensors()
+
+    def _update_smartdashboard_arcade_drive(self, linear, turn):
+        SmartDashboard.putNumber("Drivetrain Linear Speed", linear)
+        SmartDashboard.putNumber("Drivetrain Turn Speed", turn)
+
+    def _update_smartdashboard_sensors(self):
+        SmartDashboard.putNumber("Drivetrain Encoder", self._encoder_count)
+        SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
+
     def _init_components(self):
         if(self._config.getboolean(Drivetrain.encoder_section, "ENCODER_ENABLED")):
             self._encoder_a_channel = self._config.getint(self.encoder_section, "ENCODER_A_CHANNEL")
@@ -104,7 +130,7 @@ class Drivetrain(Subsystem):
             self._encoder_type = self._config.getint(self.encoder_section, "ENCODER_TYPE")
             if(self._encoder_a_channel and self._encoder_b_channel and self._encoder_type):
                 self._encoder = Encoder(self._encoder_a_channel, self._encoder_b_channel, self._encoder_reversed, self._encoder_type)
-        
+
         if(self._config.getboolean(Drivetrain.gyro_section, "GYRO_ENABLED")):
             self._gyro_channel = self._config.getint(self.gyro_section, "GYRO_CHANNEL")
             self._gyro_sensitivity = self._config.getfloat(self.gyro_section, "GYRO_SENSITIVITY")
@@ -112,7 +138,7 @@ class Drivetrain(Subsystem):
                 self._gyro = AnalogGyro(self._gyro_channel)
                 if (self._gyro and self._gyro_sensitivity):
                     self._gyro.setSensitivity(self._gyro_sensitivity)
-                
+
         if(self._config.getboolean(Drivetrain.left_motor_section, "MOTOR_ENABLED")):
             self.left_motor = Talon(self._config.getint(self.left_motor_section, "MOTOR_CHANNEL"))
 
