@@ -102,7 +102,7 @@ class Drivetrain(Subsystem):
             self._encoder_b_channel = self._config.getint(self.encoder_section, "ENCODER_B_CHANNEL")
             self._encoder_reversed = self._config.getboolean(self.encoder_section, "ENCODER_REVERSED")
             self._encoder_type = self._config.getint(self.encoder_section, "ENCODER_TYPE")
-            if(self._encoder_a_channel and self._encoder_b_channel and self._encoder_reversed and self._encoder_type):
+            if(self._encoder_a_channel and self._encoder_b_channel and self._encoder_type):
                 self._encoder = Encoder(self._encoder_a_channel, self._encoder_b_channel, self._encoder_reversed, self._encoder_type)
         
         if(self._config.getboolean(Drivetrain.gyro_section, "GYRO_ENABLED")):

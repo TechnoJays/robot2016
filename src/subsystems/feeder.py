@@ -19,15 +19,15 @@ class Feeder(Subsystem):
     _motor_inverted = None
     
     _robot = None
+    _config = None
     _motor = None
     _switch = None
     _has_ball = False
     
-    def __init__(self, robot, name=None, configfile = 'feeder.ini'):
+    def __init__(self, robot, name = None, configfile = 'feeder.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))
-        self._load_general_config()
         self._init_components()
         super().__init__(name = name)
     
