@@ -9,10 +9,10 @@ from wpilib.command.command import Command
 
 
 class FeedBallOut(Command):
-    
+
     _time_stamp = 0
-    
-    def __init__(self, robot, feed_out_time = 2.0, feederSpeed, name=None, timeout=None):
+
+    def __init__(self, robot, feed_out_time = 2.0, feederSpeed = 1.0, name=None, timeout=None):
         '''
         Constructor
         '''
@@ -42,4 +42,3 @@ class FeedBallOut(Command):
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
-    

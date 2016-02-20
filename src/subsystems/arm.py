@@ -20,7 +20,7 @@ class Arm(Subsystem):
     _arm_drive = None
     _encoder = None
     _encoder_value = 0
-    
+
     def __init__(self, robot, name=None, configfile = 'configs/subsystems.ini'):
         self._robot = robot;
         self._config_file = configfile
@@ -57,7 +57,7 @@ class Arm(Subsystem):
 
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._config_file))
-        
+
         RIGHT_MOTOR_SECTION = "ArmRightMotor"
         LEFT_MOTOR_SECTION = "ArmLeftMotor"
         ENCODER_SECTION = "ArmEncoder"
@@ -86,10 +86,10 @@ class Arm(Subsystem):
             self._arm_drive.setSafetyEnabled(False)
 
         if (config.getboolean(ENCODER_SECTION, ENABLED)):
-            encoder_a_channel = config.getint(ENCODER_SECTION, "ENCODER_A_CHANNEL")
-            encoder_b_channel = config.getint(ENCODER_SECTION, "ENCODER_B_CHANNEL")
+            encoder_a_channel = config.getint(ENCODER_SECTION, "A_CHANNEL")
+            encoder_b_channel = config.getint(ENCODER_SECTION, "B_CHANNEL")
             encoder_inverted = config.getboolean(ENCODER_SECTION, INVERTED)
-            encoder_type = config.getint(ENCODER_SECTION, "ENCODER_TYPE")
+            encoder_type = config.getint(ENCODER_SECTION, "TYPE")
             if (encoder_a_channel and encoder_b_channel and encoder_type):
                 self._encoder = Encoder(encoder_a_channel, encoder_b_channel, encoder_inverted, encoder_type)
 

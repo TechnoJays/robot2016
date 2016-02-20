@@ -49,7 +49,7 @@ class Drivetrain(Subsystem):
     _encoder_count = 0
 
     _gyro = None
-    _gyro_angle = None
+    _gyro_angle = 0.0
     _gyro_channel = None
     _gyro_sensitivity = None
 
@@ -65,7 +65,7 @@ class Drivetrain(Subsystem):
         super().__init__(name = name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(TankDrive(self._robot, self._robot._oi))
+        self.setDefaultCommand(TankDrive(self._robot, self._robot.oi))
 
     def tankDrive(self, leftSpeed, rightSpeed):
         left = leftSpeed * self._max_speed
@@ -81,7 +81,7 @@ class Drivetrain(Subsystem):
         SmartDashboard.putNumber("Drivetrain Right Speed", right)
 
     def _load_general_config(self):
-        self._max_speed = self._config.getfloat('General', "MAX_SPEED")
+        self._max_speed = self._config.getfloat(self.general_section, "MAX_SPEED")
 
     def get_encoder_value(self):
         if(self._encoder):

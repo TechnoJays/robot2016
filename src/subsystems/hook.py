@@ -59,16 +59,16 @@ class Hook(Subsystem):
 
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._config_file))
-    
+
         MOTOR_SECTION = "HookMotor"
         ENCODER_SECTION = "HookEncoder"
         ENABLED = "ENABLED"
         CHANNEL = "CHANNEL"
         INVERTED = "INVERTED"
 
-        if (self._config.getboolean(MOTOR_SECTION, ENABLED)):
-            motor_channel = self._config.getint(MOTOR_SECTION, CHANNEL)
-            motor_inverted = self._config.getboolean(MOTOR_SECTION, INVERTED)
+        if (config.getboolean(MOTOR_SECTION, ENABLED)):
+            motor_channel = config.getint(MOTOR_SECTION, CHANNEL)
+            motor_inverted = config.getboolean(MOTOR_SECTION, INVERTED)
             if (motor_channel):
                 self._motor = Talon(motor_channel)
                 if (self._motor):
