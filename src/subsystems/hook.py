@@ -3,12 +3,15 @@ Created on Feb 19, 2016
 
 @author: james
 '''
+import configparser
+import os
+
 from wpilib.command.subsystem import Subsystem
 from wpilib.encoder import Encoder
 from wpilib.talon import Talon
-import configparser
-import os
-from commands.extend_arm_analog import MoveHookAnalog
+
+from commands.move_hook_analog import MoveHookAnalog
+
 
 class Hook(Subsystem):
 
@@ -21,7 +24,7 @@ class Hook(Subsystem):
     _encoder_value = 0
 
 
-    def __init__(self, robot, name=None, configfile = 'configs/winch.ini'):
+    def __init__(self, robot, name=None, configfile = 'configs/subsystems.ini'):
         self._robot = robot;
         self._config_file = configfile
         self._init_components()
@@ -51,8 +54,8 @@ class Hook(Subsystem):
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._config_file))
     
-        MOTOR_SECTION = "Motor"
-        ENCODER_SECTION = "Encoder"
+        MOTOR_SECTION = "HookMotor"
+        ENCODER_SECTION = "HookEncoder"
         ENABLED = "ENABLED"
         CHANNEL = "CHANNEL"
         INVERTED = "INVERTED"
