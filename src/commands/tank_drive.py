@@ -13,7 +13,6 @@ class TankDrive(Command):
     '''
     classdocs
     '''
-    _tank_drive_enabled = False
     _config = None
     
     def __init__(self, robot, name=None, timeout=None):

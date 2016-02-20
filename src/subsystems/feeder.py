@@ -8,6 +8,8 @@ from wpilib.talon import Talon
 from wpilib.digitalinput import DigitalInput
 import configparser
 import os
+from commands.feed_ball_out import FeedBallOut
+from commands.feed_ball_analog import FeedBallAnalog
 
 class Feeder(Subsystem):
     
@@ -32,7 +34,7 @@ class Feeder(Subsystem):
         super().__init__(name = name)
     
     def initDefaultCommand(self):
-        return Subsystem.initDefaultCommand(self)
+        self.setDefaultCommand(FeedBallAnalog(self._robot))
     
     def spinFeeder(self, speed):
         """Spins the feeder in the given direction at a speed represented as a float"""
