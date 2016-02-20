@@ -8,7 +8,7 @@ from wpilib.command.command import Command
 from oi import JoystickAxis, UserController
 
 
-class FeedBall(Command):
+class FeedBallAnalog(Command):
     
     def __init__(self, robot, name=None, timeout=None):
         '''

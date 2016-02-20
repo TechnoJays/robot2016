@@ -4,6 +4,7 @@ Created on Feb 6, 2016
 @author: tylerstrayer
 '''
 from wpilib.command.subsystem import Subsystem
+from commands.move_arm_analog import MoveArmAnalog
 
 class ScalingArm(Subsystem):
     
@@ -11,5 +12,5 @@ class ScalingArm(Subsystem):
         pass
     
     def initDefaultCommand(self):
-        return Subsystem.initDefaultCommand(self)
+        self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
     
