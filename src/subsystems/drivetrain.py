@@ -24,11 +24,11 @@ class Drivetrain(Subsystem):
     # 
 
     # Config file section names
-    left_motor_section = "LeftMotor"
-    right_motor_section = "RightMotor"
-    general_section = "General"
-    encoder_section = "Encoder"
-    gyro_section = "Gyro"
+    left_motor_section = "DrivetrainLeftMotor"
+    right_motor_section = "DrivetrainRightMotor"
+    general_section = "DrivetrainGeneral"
+    encoder_section = "DrivetrainEncoder"
+    gyro_section = "DrivetrainGyro"
 
     # General config parameters
     _max_speed = 0
@@ -52,7 +52,7 @@ class Drivetrain(Subsystem):
     _gyro_channel = None
     _gyro_sensitivity = None
 
-    def __init__(self, robot, name = None, configfile = 'drivetrain.ini'):
+    def __init__(self, robot, name = None, configfile = 'configs/subsystems.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))
