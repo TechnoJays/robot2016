@@ -10,11 +10,9 @@ from wpilib.command.command import Command
 
 class FeedBallOut(Command):
     
-    _feed_out_time_seconds = 2.0
     _time_stamp = 0
-    _feeder_speed = 0.5
     
-    def __init__(self, robot, feed_out_time, feederSpeed, name=None, timeout=None):
+    def __init__(self, robot, feed_out_time = 2.0, feederSpeed, name=None, timeout=None):
         '''
         Constructor
         '''

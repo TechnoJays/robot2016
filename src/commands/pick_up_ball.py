@@ -7,7 +7,7 @@ from wpilib.command.command import Command
 
 class PickUpBall(Command):
     
-    def __init__(self, robot, feeder_speed = 0.5, name=None, timeout=None):
+    def __init__(self, robot, feeder_speed, name=None, timeout=None):
         '''
         Constructor
         '''
