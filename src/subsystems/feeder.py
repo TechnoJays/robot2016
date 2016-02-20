@@ -3,18 +3,20 @@ Created on Feb 6, 2016
 
 @author: tylerstrayer
 '''
-from wpilib.command.subsystem import Subsystem
-from wpilib.talon import Talon
-from wpilib.digitalinput import DigitalInput
 import configparser
 import os
-from commands.feed_ball_out import FeedBallOut
+
+from wpilib.command.subsystem import Subsystem
+from wpilib.digitalinput import DigitalInput
+from wpilib.talon import Talon
+
 from commands.feed_ball_analog import FeedBallAnalog
+
 
 class Feeder(Subsystem):
     
-    motor_section = "Motor"
-    switch_section = "Switch"
+    motor_section = "FeederMotor"
+    switch_section = "FeederSwitch"
     
     _motor_channel = None
     _switch_channel = None
@@ -26,7 +28,7 @@ class Feeder(Subsystem):
     _switch = None
     _has_ball = False
     
-    def __init__(self, robot, name = None, configfile = 'feeder.ini'):
+    def __init__(self, robot, name = None, configfile = 'configs/subsystems.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))
