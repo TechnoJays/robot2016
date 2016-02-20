@@ -3,9 +3,10 @@ import wpilib
 
 from commands.do_nothing import DoNothing
 from oi import OI
+from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from subsystems.feeder import Feeder
-from subsystems.scaling_arm import ScalingArm
+from subsystems.winch import Hook
 
 
 class MyRobot(wpilib.IterativeRobot):
@@ -33,7 +34,8 @@ class MyRobot(wpilib.IterativeRobot):
         self.oi = OI(self)
         self.drivetrain = Drivetrain(self)
         self.feeder = Feeder(self)
-        self.arm = ScalingArm(self)
+        self.arm = Arm(self)
+        self.hook = Hook(self)
         
         self.autonomous_command = DoNothing(self)
         #Create the command used for the autonomous period

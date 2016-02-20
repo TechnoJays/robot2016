@@ -9,6 +9,7 @@ from wpilib.victor import Victor
 from wpilib.robotdrive import RobotDrive
 import configparser
 import os
+from commands.move_arm_analog import MoveArmAnalog
 
 class Arm(Subsystem):
     
@@ -18,14 +19,14 @@ class Arm(Subsystem):
     _encoder = None
     _encoder_value = 0
     
-    def __init__(self, robot, name=None, configfile = 'arm.ini'):
+    def __init__(self, robot, name=None, configfile = 'configs/arm.ini'):
         self._robot = robot;
         self._config_file = configfile
         self._init_components()
         super().__init__(name = name)
     
     def initDefaultCommand(self):
-        return Subsystem.initDefaultCommand(self)
+        self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
         
     def move_arm(self, speed):
         if (self._arm_drive):

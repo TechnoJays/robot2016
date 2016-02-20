@@ -26,11 +26,11 @@ class MoveArmAnalog(Command):
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
         move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTY);
-        arm_count = self._robot.arm.getArmCount()
+        arm_count = self._robot.arm.get_encoder_value()
         if self._raise_stop_count <= arm_count <= self._lower_stop_count:
-            self._robot.arm.moveArm(move_speed)
+            self._robot.arm.move_arm(move_speed)
         else:
-            self._robot.arm.moveArm(0)
+            self._robot.arm.move_arm(0)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
@@ -38,7 +38,7 @@ class MoveArmAnalog(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self._robot.arm.moveArm(0)
+        self._robot.arm.move_arm(0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

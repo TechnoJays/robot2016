@@ -8,8 +8,9 @@ from wpilib.encoder import Encoder
 from wpilib.talon import Talon
 import configparser
 import os
+from commands.extend_arm_analog import MoveHookAnalog
 
-class Winch(Subsystem):
+class Hook(Subsystem):
 
     _robot = None
     _config_file = None
@@ -20,13 +21,17 @@ class Winch(Subsystem):
     _encoder_value = 0
 
 
-    def __init__(self, robot, name=None, configfile = 'winch.ini'):
+    def __init__(self, robot, name=None, configfile = 'configs/winch.ini'):
         self._robot = robot;
         self._config_file = configfile
         self._init_components()
         super().__init__(name = name)
+    
+    def initDefaultCommand(self):
+        # Make it not a magic number
+        self.setDefaultCommand(MoveHookAnalog(self._robot, 50))
         
-    def extend_arm(self, speed):
+    def move_hook(self, speed):
         if (self._motor):
             self._motor.setSpeed(speed)
         
