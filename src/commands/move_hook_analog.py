@@ -8,7 +8,7 @@ from wpilib.command.command import Command
 from oi import UserController, JoystickAxis
 
 
-class MoveHookAnalog(Command):    
+class MoveHookAnalog(Command):
 
     def __init__(self, robot, lower_stop_count, raise_stop_count = 0, name=None, timeout=None):
         '''
@@ -28,10 +28,11 @@ class MoveHookAnalog(Command):
         """Called repeatedly when this Command is scheduled to run"""
         move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTX);
         hook_count = self._robot.hook.get_encoder_value()
-        if self._raise_stop_count >= hook_count >= self._lower_stop_count:
-            self._robot.hook.move_hook(move_speed)
-        else:
-            self._robot.hook.move_hook(0)
+        #if self._raise_stop_count >= hook_count >= self._lower_stop_count:
+        #    self._robot.hook.move_hook(move_speed)
+        #else:
+        #    self._robot.hook.move_hook(0)
+        self._robot.hook.move_hook(move_speed)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""

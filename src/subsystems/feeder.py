@@ -15,10 +15,10 @@ from commands.feed_ball_analog import FeedBallAnalog
 
 
 class Feeder(Subsystem):
-    
+
     motor_section = "FeederMotor"
     switch_section = "FeederSwitch"
-    
+
     _motor_channel = None
     _switch_channel = None
     _motor_inverted = None
@@ -28,8 +28,8 @@ class Feeder(Subsystem):
     _motor = None
     _switch = None
     _has_ball = False
-    
-    def __init__(self, robot, name = None, configfile = 'configs/subsystems.ini'):
+
+    def __init__(self, robot, name = None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))

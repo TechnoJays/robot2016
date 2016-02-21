@@ -27,10 +27,11 @@ class MoveArmAnalog(Command):
         """Called repeatedly when this Command is scheduled to run"""
         move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTY);
         arm_count = self._robot.arm.get_encoder_value()
-        if self._raise_stop_count <= arm_count <= self._lower_stop_count:
-            self._robot.arm.move_arm(move_speed)
-        else:
-            self._robot.arm.move_arm(0)
+        #if self._raise_stop_count <= arm_count <= self._lower_stop_count:
+        #    self._robot.arm.move_arm(move_speed)
+        #else:
+        #    self._robot.arm.move_arm(0)
+        self._robot.arm.move_arm(move_speed)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""

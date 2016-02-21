@@ -53,7 +53,7 @@ class Drivetrain(Subsystem):
     _gyro_channel = None
     _gyro_sensitivity = None
 
-    def __init__(self, robot, name = None, configfile = 'configs/subsystems.ini'):
+    def __init__(self, robot, name = None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
         self._config.read(os.path.join(os.getcwd(), configfile))
