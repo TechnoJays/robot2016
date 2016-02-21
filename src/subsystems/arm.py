@@ -3,15 +3,18 @@ Created on Feb 6, 2016
 
 @author: tylerstrayer
 '''
-from wpilib.command.subsystem import Subsystem
-from wpilib.encoder import Encoder
-from wpilib.victor import Victor
-from wpilib.robotdrive import RobotDrive
-from commands.move_arm_analog import MoveArmAnalog
-from wpilib.smartdashboard import SmartDashboard
-
 import configparser
 import os
+
+from wpilib.command.subsystem import Subsystem
+from wpilib.encoder import Encoder
+from wpilib.robotdrive import RobotDrive
+from wpilib.smartdashboard import SmartDashboard
+from wpilib.talon import Talon
+from wpilib.victor import Victor
+
+from commands.move_arm_analog import MoveArmAnalog
+
 
 class Arm(Subsystem):
 
@@ -70,7 +73,7 @@ class Arm(Subsystem):
             left_motor_channel = config.getint(LEFT_MOTOR_SECTION, CHANNEL)
             left_motor_inverted = config.getboolean(LEFT_MOTOR_SECTION, INVERTED)
             if (left_motor_channel):
-                left_motor = Victor(left_motor_channel)
+                left_motor = Talon(left_motor_channel)
                 if (left_motor):
                     left_motor.setInverted(left_motor_inverted)
                     self._left_motor=left_motor
@@ -79,7 +82,7 @@ class Arm(Subsystem):
             right_motor_channel = config.getint(RIGHT_MOTOR_SECTION, CHANNEL)
             right_motor_inverted = config.getboolean(RIGHT_MOTOR_SECTION, INVERTED)
             if (right_motor_channel):
-                right_motor = Victor(right_motor_channel)
+                right_motor = Talon(right_motor_channel)
                 if (right_motor):
                     right_motor.setInverted(right_motor_inverted)
                     self._right_motor=right_motor
