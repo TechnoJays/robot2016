@@ -21,13 +21,15 @@ class Arm(Subsystem):
     _robot = None
     _config_file = None
     _encoder = None
+    _speed_ratio = 1.0
     _encoder_value = 0
     _left_motor = None
     _right_motor = None
 
-    def __init__(self, robot, name=None, configfile = '/home/lvuser/configs/subsystems.ini'):
+    def __init__(self, robot, speed_ratio=0.5, name=None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
         self._config_file = configfile
+        self._speed_ratio = speed_ratio
         self._init_components()
         self._update_smartdashboard(0.0)
         super().__init__(name = name)
@@ -36,8 +38,10 @@ class Arm(Subsystem):
         self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
 
     def move_arm(self, speed):
-        self._left_motor.setSpeed(speed)
-        self._left_motor.set
+        if self._left_motor:
+            self._left_motor.setSpeed(-1.0 * speed * self._speed_ratio)
+        if self._right_motor:
+            self._right_motor.setSpeed(speed * self._speed_ratio)
         self.get_encoder_value()
         self._update_smartdashboard(speed)
 
@@ -73,7 +77,7 @@ class Arm(Subsystem):
             left_motor_channel = config.getint(LEFT_MOTOR_SECTION, CHANNEL)
             left_motor_inverted = config.getboolean(LEFT_MOTOR_SECTION, INVERTED)
             if (left_motor_channel):
-                left_motor = Talon(left_motor_channel)
+                left_motor = Victor(left_motor_channel)
                 if (left_motor):
                     left_motor.setInverted(left_motor_inverted)
                     self._left_motor=left_motor
@@ -82,7 +86,7 @@ class Arm(Subsystem):
             right_motor_channel = config.getint(RIGHT_MOTOR_SECTION, CHANNEL)
             right_motor_inverted = config.getboolean(RIGHT_MOTOR_SECTION, INVERTED)
             if (right_motor_channel):
-                right_motor = Talon(right_motor_channel)
+                right_motor = Victor(right_motor_channel)
                 if (right_motor):
                     right_motor.setInverted(right_motor_inverted)
                     self._right_motor=right_motor
