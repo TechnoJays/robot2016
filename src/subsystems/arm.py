@@ -17,9 +17,10 @@ class Arm(Subsystem):
 
     _robot = None
     _config_file = None
-    _arm_drive = None
     _encoder = None
     _encoder_value = 0
+    _left_motor = None
+    _right_motor = None
 
     def __init__(self, robot, name=None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
@@ -32,8 +33,8 @@ class Arm(Subsystem):
         self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
 
     def move_arm(self, speed):
-        if (self._arm_drive):
-            self._arm_drive.drive(speed, 0)
+        self._left_motor.setSpeed(speed)
+        self._left_motor.set
         self.get_encoder_value()
         self._update_smartdashboard(speed)
 
@@ -72,6 +73,7 @@ class Arm(Subsystem):
                 left_motor = Victor(left_motor_channel)
                 if (left_motor):
                     left_motor.setInverted(left_motor_inverted)
+                    self._left_motor=left_motor
 
         if (config.getboolean(RIGHT_MOTOR_SECTION, ENABLED)):
             right_motor_channel = config.getint(RIGHT_MOTOR_SECTION, CHANNEL)
@@ -80,10 +82,7 @@ class Arm(Subsystem):
                 right_motor = Victor(right_motor_channel)
                 if (right_motor):
                     right_motor.setInverted(right_motor_inverted)
-
-        if (right_motor and left_motor):
-            self._arm_drive = RobotDrive(left_motor, right_motor)
-            self._arm_drive.setSafetyEnabled(False)
+                    self._right_motor=right_motor
 
         if (config.getboolean(ENCODER_SECTION, ENABLED)):
             encoder_a_channel = config.getint(ENCODER_SECTION, "A_CHANNEL")
