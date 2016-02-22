@@ -11,6 +11,7 @@ from wpilib.smartdashboard import SmartDashboard
 
 import configparser
 import os
+from wpilib.victorsp import VictorSP
 
 
 class Hook(Subsystem):
@@ -70,7 +71,7 @@ class Hook(Subsystem):
             motor_channel = config.getint(MOTOR_SECTION, CHANNEL)
             motor_inverted = config.getboolean(MOTOR_SECTION, INVERTED)
             if (motor_channel):
-                self._motor = Talon(motor_channel)
+                self._motor = VictorSP(motor_channel)
                 if (self._motor):
                     self._motor.setInverted(motor_inverted)
 
