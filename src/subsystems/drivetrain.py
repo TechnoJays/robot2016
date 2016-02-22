@@ -72,7 +72,7 @@ class Drivetrain(Subsystem):
     def tankDrive(self, leftSpeed, rightSpeed):
         left = leftSpeed * self._max_speed
         right = rightSpeed * self._max_speed
-        self._robot_drive.tankDrive(left, right, False)
+        self._robot_drive.tankDrive(left, right, True)
         self._update_smartdashboard_tank_drive(leftSpeed, rightSpeed)
         self.get_gyro_angle()
         self.get_pitch_angle()
