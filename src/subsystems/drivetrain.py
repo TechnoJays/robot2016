@@ -32,7 +32,7 @@ class Drivetrain(Subsystem):
     gyro_section = "DrivetrainGyro"
 
     # General config parameters
-    _max_speed = 0
+    _max_pickup_speed = 0
 
     _robot = None
     _config = None
@@ -68,8 +68,8 @@ class Drivetrain(Subsystem):
         self.setDefaultCommand(TankDrive(self._robot, self._robot.oi))
 
     def tankDrive(self, leftSpeed, rightSpeed):
-        left = leftSpeed * self._max_speed
-        right = rightSpeed * self._max_speed
+        left = leftSpeed * self._max_pickup_speed
+        right = rightSpeed * self._max_pickup_speed
         self._robot_drive.tankDrive(left, right, False)
         self._update_smartdashboard_tank_drive(leftSpeed, rightSpeed)
         self.get_gyro_angle()
@@ -81,7 +81,7 @@ class Drivetrain(Subsystem):
         SmartDashboard.putNumber("Drivetrain Right Speed", right)
 
     def _load_general_config(self):
-        self._max_speed = self._config.getfloat(self.general_section, "MAX_SPEED")
+        self._max_pickup_speed = self._config.getfloat(self.general_section, "MAX_SPEED")
 
     def get_encoder_value(self):
         if(self._encoder):
