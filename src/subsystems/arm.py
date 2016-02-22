@@ -19,23 +19,33 @@ from commands.move_arm_analog import MoveArmAnalog
 class Arm(Subsystem):
 
     _robot = None
-    _config_file = None
+    _subsystem_config = None
     _encoder = None
     _speed_ratio = 1.0
     _encoder_value = 0
     _left_motor = None
     _right_motor = None
 
-    def __init__(self, robot, speed_ratio=0.5, name=None, configfile = '/home/lvuser/configs/subsystems.ini'):
+    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/config/commands.ini'):
         self._robot = robot;
-        self._config_file = configfile
+        self._subsystem_config = subsystem_config
+        self._command_config = command_config
         self._speed_ratio = speed_ratio
         self._init_components()
         self._update_smartdashboard(0.0)
         super().__init__(name = name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
+        config = configparser.ConfigParser()
+        config.read(os.path.join(os.getcwd(), self._command_config))
+        COMMAND_SECTION = "ArmCommands"
+        
+        back_drive_limit = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_LIMIT")
+        back_drive_speed = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_SPEED")
+        scaling_factor = config.getfloat(COMMAND_SECTION, "SCALING_FACTOR")
+        raised_bound = config.getint(COMMAND_SECTION, "RAISED_BOUND")
+        self.setDefaultCommand(MoveArmAnalog(self._robot, scaling_factor, back_drive_speed,
+                                             back_drive_limit, raised_bound))
 
     def move_arm(self, speed):
         if self._left_motor:
@@ -64,7 +74,7 @@ class Arm(Subsystem):
     def _init_components(self):
 
         config = configparser.ConfigParser()
-        config.read(os.path.join(os.getcwd(), self._config_file))
+        config.read(os.path.join(os.getcwd(), self._subsystem_config))
 
         RIGHT_MOTOR_SECTION = "ArmRightMotor"
         LEFT_MOTOR_SECTION = "ArmLeftMotor"

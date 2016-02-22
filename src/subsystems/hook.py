@@ -17,7 +17,7 @@ from wpilib.victorsp import VictorSP
 class Hook(Subsystem):
 
     _robot = None
-    _config_file = None
+    _subsystem_config = None
     _motor = None
     _encoder = None
     _encoder_value = 0
@@ -25,7 +25,7 @@ class Hook(Subsystem):
 
     def __init__(self, robot, name=None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
-        self._config_file = configfile
+        self._subsystem_config = configfile
         self._init_components()
         self._update_smartdashboard(0.0)
         super().__init__(name = name)
@@ -59,7 +59,7 @@ class Hook(Subsystem):
     def _init_components(self):
 
         config = configparser.ConfigParser()
-        config.read(os.path.join(os.getcwd(), self._config_file))
+        config.read(os.path.join(os.getcwd(), self._subsystem_config))
 
         MOTOR_SECTION = "HookMotor"
         ENCODER_SECTION = "HookEncoder"
