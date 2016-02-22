@@ -14,7 +14,8 @@ class TankDrive(Command):
     classdocs
     '''
     _config = None
-    
+    DPAD_LINEAR_SPEED = 0.75
+
     def __init__(self, robot, name=None, timeout=None):
         '''
         Constructor
@@ -29,9 +30,13 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        left_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.LEFTY)
-        right_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.RIGHTY)
-        self.robot.drivetrain.tankDrive(left_track, right_track)
+        dpad_y = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.DPADY)
+        if dpad_y != 0.0:
+            self.robot.drivetrain.arcade_drive(DPAD_LINEAR_SPEED * dpad_y, 0.0)
+        else:
+            left_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.LEFTY)
+            right_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.RIGHTY)
+            self.robot.drivetrain.tankDrive(left_track, right_track)
         return Command.execute(self)
 
     def isFinished(self):
