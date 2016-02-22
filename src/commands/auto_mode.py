@@ -15,8 +15,6 @@ class AutoCommandGroup(CommandGroup):
     classdocs
     '''
     _robot = None
-    _initial_position = None
-    _target_defense = None
     _config = None
     
     _drivetrain_section = "Drivetrain"
@@ -70,14 +68,6 @@ class AutoCommandGroup(CommandGroup):
                 self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._half_distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             elif (self._obstacle_offset == 0):
                 self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._half_distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-            #self.addSequential(drive_time(self._robot, self._drivetrain_duration, self._drivetrain_speed, self._drivetrain_ramp_threshold))
-            #self.addSequential(drive_time(self._robot, self._drivetrain_duration, self._drivetrain_speed, self._drivetrain_ramp_threshold))
-            self.addSequential(turn_degrees(self._robot, self._drivetrain_turn_angle, self._drivetrain_speed, self._drivetrain_turn_threshold, self._drivetrain_ramp_threshold))
-            #self.addSequential(drive_time(self._robot, self._drivetrain_duration, self._drivetrain_speed, self._drivetrain_ramp_threshold))
-            self.addSequential(turn_degrees(self._robot, self._drivetrain_turn_angle, self._drivetrain_speed, self._drivetrain_turn_threshold, self._drivetrain_ramp_threshold))
-            self.addSequential(feed_ball_out(self._robot, self._feeder_auto_out_time, self._feeder_auto_out_speed))
-            self.addSequential(turn_degrees(self._robot, self._drivetrain_turn_angle, self._drivetrain_speed, self._drivetrain_turn_threshold, self._drivetrain_ramp_threshold))
-            #self.addSequential(drive_time(self._robot, self._drivetrain_duration, self._drivetrain_speed, self._drivetrain_ramp_threshold))
             
     def _init_commands(self):
         self._half_distance_to_obstacle = self._config.getint(self._drivetrain_section, "HALF_DISTANCE_TO_OBSTACLE")
