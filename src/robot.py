@@ -6,7 +6,7 @@ from oi import OI
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from subsystems.feeder import Feeder
-from subsystems.winch import Hook
+from subsystems.hook import Hook
 
 
 class MyRobot(wpilib.IterativeRobot):

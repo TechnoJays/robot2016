@@ -3,37 +3,55 @@ Created on Feb 6, 2016
 
 @author: tylerstrayer
 '''
-from wpilib.command.subsystem import Subsystem
-from wpilib.encoder import Encoder
-from wpilib.victor import Victor
-from wpilib.robotdrive import RobotDrive
-from commands.move_arm_analog import MoveArmAnalog
-from wpilib.smartdashboard import SmartDashboard
-
 import configparser
 import os
+
+from wpilib.command.subsystem import Subsystem
+from wpilib.encoder import Encoder
+from wpilib.robotdrive import RobotDrive
+from wpilib.smartdashboard import SmartDashboard
+from wpilib.talon import Talon
+from wpilib.victor import Victor
+
+from commands.move_arm_analog import MoveArmAnalog
+
 
 class Arm(Subsystem):
 
     _robot = None
-    _config_file = None
-    _arm_drive = None
+    _subsystem_config = None
     _encoder = None
+    _speed_ratio = 1.0
     _encoder_value = 0
-    
-    def __init__(self, robot, name=None, configfile = 'configs/subsystems.ini'):
+    _left_motor = None
+    _right_motor = None
+
+    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/config/commands.ini'):
         self._robot = robot;
-        self._config_file = configfile
+        self._subsystem_config = subsystem_config
+        self._command_config = command_config
+        self._speed_ratio = speed_ratio
         self._init_components()
         self._update_smartdashboard(0.0)
         super().__init__(name = name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(MoveArmAnalog(self._robot, 50))
+        config = configparser.ConfigParser()
+        config.read(os.path.join(os.getcwd(), self._command_config))
+        COMMAND_SECTION = "ArmCommands"
+        
+        back_drive_limit = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_LIMIT")
+        back_drive_speed = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_SPEED")
+        scaling_factor = config.getfloat(COMMAND_SECTION, "SCALING_FACTOR")
+        raised_bound = config.getint(COMMAND_SECTION, "RAISED_BOUND")
+        self.setDefaultCommand(MoveArmAnalog(self._robot, scaling_factor, back_drive_speed,
+                                             back_drive_limit, raised_bound))
 
     def move_arm(self, speed):
-        if (self._arm_drive):
-            self._arm_drive.drive(speed, 0)
+        if self._left_motor:
+            self._left_motor.setSpeed(-1.0 * speed * self._speed_ratio)
+        if self._right_motor:
+            self._right_motor.setSpeed(speed * self._speed_ratio)
         self.get_encoder_value()
         self._update_smartdashboard(speed)
 
@@ -56,8 +74,8 @@ class Arm(Subsystem):
     def _init_components(self):
 
         config = configparser.ConfigParser()
-        config.read(os.path.join(os.getcwd(), self._config_file))
-        
+        config.read(os.path.join(os.getcwd(), self._subsystem_config))
+
         RIGHT_MOTOR_SECTION = "ArmRightMotor"
         LEFT_MOTOR_SECTION = "ArmLeftMotor"
         ENCODER_SECTION = "ArmEncoder"
@@ -72,6 +90,7 @@ class Arm(Subsystem):
                 left_motor = Victor(left_motor_channel)
                 if (left_motor):
                     left_motor.setInverted(left_motor_inverted)
+                    self._left_motor=left_motor
 
         if (config.getboolean(RIGHT_MOTOR_SECTION, ENABLED)):
             right_motor_channel = config.getint(RIGHT_MOTOR_SECTION, CHANNEL)
@@ -80,16 +99,13 @@ class Arm(Subsystem):
                 right_motor = Victor(right_motor_channel)
                 if (right_motor):
                     right_motor.setInverted(right_motor_inverted)
-
-        if (right_motor and left_motor):
-            self._arm_drive = RobotDrive(left_motor, right_motor)
-            self._arm_drive.setSafetyEnabled(False)
+                    self._right_motor=right_motor
 
         if (config.getboolean(ENCODER_SECTION, ENABLED)):
-            encoder_a_channel = config.getint(ENCODER_SECTION, "ENCODER_A_CHANNEL")
-            encoder_b_channel = config.getint(ENCODER_SECTION, "ENCODER_B_CHANNEL")
+            encoder_a_channel = config.getint(ENCODER_SECTION, "A_CHANNEL")
+            encoder_b_channel = config.getint(ENCODER_SECTION, "B_CHANNEL")
             encoder_inverted = config.getboolean(ENCODER_SECTION, INVERTED)
-            encoder_type = config.getint(ENCODER_SECTION, "ENCODER_TYPE")
+            encoder_type = config.getint(ENCODER_SECTION, "TYPE")
             if (encoder_a_channel and encoder_b_channel and encoder_type):
                 self._encoder = Encoder(encoder_a_channel, encoder_b_channel, encoder_inverted, encoder_type)
 

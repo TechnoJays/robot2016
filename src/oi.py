@@ -4,7 +4,12 @@ import configparser
 import os
 import wpilib
 from wpilib.smartdashboard import SmartDashboard
-from commands import *
+from wpilib.buttons.button import Button
+from wpilib.buttons.joystickbutton import JoystickButton
+from commands.pick_up_ball import PickUpBall
+from commands.retract_hook_to_count import RetractHookToCount
+from commands.raise_arm_extend_hook import RaiseArmExtendHook
+from commands.shoot_ball import ShootBall
 
 class JoystickAxis(object):
     """Enumerates joystick axis."""
@@ -14,7 +19,6 @@ class JoystickAxis(object):
     RIGHTY = 3
     DPADX = 5
     DPADY = 6
-
 
 class JoystickButtons(object):
     """Enumerates joystick buttons."""
@@ -34,20 +38,18 @@ class UserController(object):
     DRIVER = 0
     SCORING = 1
 
-
 class OI:
     """
     This class is the glue that binds the controls on the physical operator
     interface to the commands and command groups that allow control of the robot.
     """
     _config=None
-
     _controllers = []
 
-    def __init__(self, robot, configfile = 'joysticks.ini'):
+    def __init__(self, robot, configfile='/home/lvuser/configs/joysticks.ini', command_config='/home/lvuser/configs/commands.ini'):
         self.robot = robot
         self._config = configparser.ConfigParser()
-        self._config.read(os.path.join(os.getcwd(), configfile))
+        self._config.read(configfile)
 
         self._init_joystick_binding()
 
@@ -55,6 +57,24 @@ class OI:
             self._controllers.append(self._init_joystick(i))
 
         self._create_smartdashboard_buttons()
+
+        cmdcfg = configparser.ConfigParser()
+        cmdcfg.read(configfile)
+
+        arm_max_position = cmdcfg.getint("ArmCommands", "RAISED_BOUND")
+        hook_max_position = cmdcfg.getint("HookCommands", "EXTENDED_BOUND")
+
+        scoring_right_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
+        scoring_right_trigger.whenPressed(ShootBall(self.robot))
+
+        #scoring_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
+        #scoring_a_button.whenPressed(PickUpBall(self.robot, 1.0))
+
+        #scoring_left_bumper = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
+        #scoring_left_bumper.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
+
+        #scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
+        #scoring_left_trigger.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
@@ -121,26 +141,27 @@ class OI:
         return value
 
     def _create_smartdashboard_buttons(self):
-        SmartDashboard.putData("DriveEncoderCounts",
-            commands.drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
-        SmartDashboard.putData("DriveTime",
-            commands.drive_time.DriveTime(self.robot, 2.0, 1.0, 0.3))
-        SmartDashboard.putData("ExtendHookToCount",
-            commands.extend_hook_to_count.ExtendHookToCount(self.robot, 1.0, 50))
-        SmartDashboard.putData("FeedBallOut",
-            commands.feed_ball_out.FeedBallOut(self.robot, 1.0, 1.0))
-        SmartDashboard.putData("LowerArmToCount",
-            commands.lower_arm_to_count.LowerArm(self.robot, 0, 1.0))
-        SmartDashboard.putData("PickUpBall",
-            commands.pick_up_ball.PickUpBall(self.robot, 0.5))
-        SmartDashboard.putData("RaiseArmToCount",
-            commands.raise_arm_to_count.RaiseArmToCount(self.robot, 1.0, 50))
-        SmartDashboard.putData("RetractHookToCount",
-            commands.retract_hook_to_count.RetractHookToCount(self.robot, 1.0, 0))
-        SmartDashboard.putData("TurnDegrees",
-            commands.turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
-        SmartDashboard.putData("TurnTime",
-            commands.turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
+        #SmartDashboard.putData("DriveEncoderCounts",
+        #    drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
+        #SmartDashboard.putData("DriveTime",
+        #    drive_time.DriveTime(self.robot, 2.0, 1.0, 0.3))
+        #SmartDashboard.putData("ExtendHookToCount",
+        #    extend_hook_to_count.ExtendHookToCount(self.robot, 1.0, 50))
+        #SmartDashboard.putData("FeedBallOut",
+        #    feed_ball_out.FeedBallOut(self.robot, 1.0, 1.0))
+        #SmartDashboard.putData("LowerArmToCount",
+        #    lower_arm_to_count.LowerArm(self.robot, 0, 1.0))
+        #SmartDashboard.putData("PickUpBall",
+        #    pick_up_ball.PickUpBall(self.robot, 0.5))
+        #SmartDashboard.putData("RaiseArmToCount",
+        #    raise_arm_to_count.RaiseArmToCount(self.robot, 1.0, 50))
+        #SmartDashboard.putData("RetractHookToCount",
+        #    retract_hook_to_count.RetractHookToCount(self.robot, 1.0, 0))
+        #SmartDashboard.putData("TurnDegrees",
+        #    turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
+        #SmartDashboard.putData("TurnTime",
+        #    turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
+        pass
 
     def _init_joystick(self, driver):
         config_section = "JoyConfig" + str(driver)
