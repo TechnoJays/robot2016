@@ -67,14 +67,14 @@ class OI:
         scoring_right_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
         scoring_right_trigger.whenPressed(ShootBall(self.robot))
 
-        scoring_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
-        scoring_a_button.whenPressed(PickUpBall(self.robot, 1.0))
+        #scoring_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
+        #scoring_a_button.whenPressed(PickUpBall(self.robot, 1.0))
 
-        scoring_left_bumper = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
-        scoring_left_bumper.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
+        #scoring_left_bumper = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
+        #scoring_left_bumper.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
 
-        scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
-        scoring_left_trigger.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
+        #scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
+        #scoring_left_trigger.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
