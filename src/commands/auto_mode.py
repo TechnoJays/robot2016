@@ -18,7 +18,9 @@ class AutoCommandGroup(CommandGroup):
     _config = None
     
     _drivetrain_section = "Drivetrain"
-    _half_distance_to_obstacle = None
+    _distance_to_obstacle = None
+    _distance_to_shooting_line = None
+    _distance_to_shooting_position = None
     _auto_speed = None
     _drivetrain_threshold = None
     _drivetrain_ramp_threshold = None
@@ -29,18 +31,23 @@ class AutoCommandGroup(CommandGroup):
     
     _auto_hook_section = "Hook"
     
+    # determine which direction, if any, and how far to travel to obstacle
     _obstacle_target = None
     _starting_position = None
+    _return_obstacle_target = None
     _obstacle_offset = None
     _alignment_drive = None
     _lane_width = None
     _right_angle = 90
     _direction = None
+    _turn_to_goal = None
+    _turn_back_to_obstacle = 180
+    _approach_defense = CommandGroup()
 
-    def __init__(self, robot, start_position, target_obstacle, configfile = "configs/auto.ini"):
+    def __init__(self, robot, start_position, target_obstacle, configfile = "/home/lvuser/configs/auto.ini"):
         self._robot = robot
         self._config = configparser.ConfigParser()
-        self._config.read(os.path.join(os.getcwd(), configfile))
+        self._config.read(configfile)
         self._init_commands()
         
         if (self._obstacle_target > self._starting_position):
@@ -52,29 +59,42 @@ class AutoCommandGroup(CommandGroup):
             
         self._obstacle_offset = abs(self._obstacle_target - self._starting_position)
         
-        self.execute_commands()
+        self.add_commands()
 
-    def execute_commands(self):
-        if (self):
-            self.addParallel(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
-            self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._half_distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-            if (self._obstacle_offset != 0):
-                self._alignment_drive = self._obstacle_offset * self._lane_width
-                self._right_angle = self._right_angle * self._direction
-                self.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-                self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._alignment_drive, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-                self._right_angle = self._right_angle * -1
-                self.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-                self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._half_distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-            elif (self._obstacle_offset == 0):
-                self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._half_distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+
+    def add_commands(self):
+        if (self._obstacle_offset != 0):
+            self._init_alignment_drive = self._obstacle_offset * self._lane_width
+            self._right_angle = self._right_angle * self._direction
+            self._approach_defense.addParallel(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
+            self._approach_defense.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+            self.addSequential(self._approach_defense)
+            self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._alignment_drive, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+            self._right_angle = self._right_angle * -1
+            self.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+            self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        elif (self._obstacle_offset == 0):
+            self.addSequential(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
+            self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        #todo correct direction based on gyro?
+        #todo distance_to_shooting_line * (enum with pre-determined counts based on target obstacle?) OR "math that shit"
+        self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_shooting_line, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        #todo turn toward goal (enum with pre-determined angles based on target obstacle?) OR "math that shit"
+        #todo self.addSequential(turn toward goal)
+        self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_shooting_position, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # self.addSequential(feed_ball_out.FeedBallOut(self._robot))
+        # self._turn_back_to_obstacle = self._turn_back_to_obstacle - ^ the angle used on line 78
+        self.addSequential(turn_degrees.TurnDegrees(self._robot, self._turn_back_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             
     def _init_commands(self):
-        self._half_distance_to_obstacle = self._config.getint(self._drivetrain_section, "HALF_DISTANCE_TO_OBSTACLE")
+        self._distance_to_obstacle = self._config.getint(self._drivetrain_section, "DISTANCE_TO_OBSTACLE")
         self._auto_speed = self._config.getint(self._drivetrain_section, "SPEED")
         self._drivetrain_threshold = self._config.getint(self._drivetrain_section, "THRESHOLD")
         self._drivetrain_ramp_threshold = self._config.getint(self._drivetrain_section, "RAMP_THRESHOLD")
         self._lane_width = self._config.getint(self._drivetrain_section, "LANE_WIDTH")
+        self._distance_to_shooting_line = self._config.getint(self._drivetrain_section, "DISTANCE_TO_SHOOTING_LINE")
+        self._distance_to_shooting_position = self._config.getint(self._drivetrain_section, "DISTANCE_TO_SHOOTING_POSITION")
         
         #Parallel
         # Move arm down
