@@ -6,15 +6,15 @@ Created on Feb 6, 2016
 from wpilib.command.command import Command
 
 class RetractHookToCount(Command):
-    
-    def __init__(self, robot, extend_speed, raise_stop_count = 0, name=None, timeout=None):
+
+    def __init__(self, robot, speed_ratio, stop_count = 0, name=None, timeout=None):
         '''
         Constructor
         '''
         super().__init__(name, timeout)
         self._robot = robot
-        self._extend_speed = extend_speed
-        self._raise_stop_count = raise_stop_count
+        self._speed_ratio = speed_ratio
+        self._stop_count = stop_count
         self.requires(robot.hook)
 
     def initialize(self):
@@ -23,15 +23,15 @@ class RetractHookToCount(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self._robot.arm.move_hook(self._extend_speed)
+        self._robot.arm.move_hook(self._speed_ratio * -1.0)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return self._robot.arm.get_encoder_value() <= self._raise_stop_count
+        return self._robot.arm.get_encoder_value() <= self._stop_count
 
     def end(self):
         """Called once after isFinished returns true"""
-        self._robot.arm.move_hook(0)
+        self._robot.arm.move_hook(0.0)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

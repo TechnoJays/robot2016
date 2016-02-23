@@ -4,7 +4,12 @@ import configparser
 import os
 import wpilib
 from wpilib.smartdashboard import SmartDashboard
-#from commands import drive_encoder_counts, drive_time, extend_hook_to_count, feed_ball_out, lower_arm_to_count, pick_up_ball, raise_arm_to_count, retract_hook_to_count, turn_degrees, turn_time
+from wpilib.buttons.button import Button
+from wpilib.buttons.joystickbutton import JoystickButton
+from commands.pick_up_ball import PickUpBall
+from commands.retract_hook_to_count import RetractHookToCount
+from commands.raise_arm_extend_hook import RaiseArmExtendHook
+from commands.shoot_ball import ShootBall
 
 class JoystickAxis(object):
     """Enumerates joystick axis."""
@@ -14,7 +19,6 @@ class JoystickAxis(object):
     RIGHTY = 3
     DPADX = 5
     DPADY = 6
-
 
 class JoystickButtons(object):
     """Enumerates joystick buttons."""
@@ -34,20 +38,18 @@ class UserController(object):
     DRIVER = 0
     SCORING = 1
 
-
 class OI:
     """
     This class is the glue that binds the controls on the physical operator
     interface to the commands and command groups that allow control of the robot.
     """
     _config=None
-
     _controllers = []
 
-    def __init__(self, robot, configfile = '/home/lvuser/configs/joysticks.ini'):
+    def __init__(self, robot, configfile='/home/lvuser/configs/joysticks.ini', command_config='/home/lvuser/configs/commands.ini'):
         self.robot = robot
         self._config = configparser.ConfigParser()
-        self._config.read(os.path.join(os.getcwd(), configfile))
+        self._config.read(configfile)
 
         self._init_joystick_binding()
 
@@ -55,6 +57,24 @@ class OI:
             self._controllers.append(self._init_joystick(i))
 
         self._create_smartdashboard_buttons()
+
+        cmdcfg = configparser.ConfigParser()
+        cmdcfg.read(configfile)
+
+        arm_max_position = cmdcfg.getint("ArmCommands", "RAISED_BOUND")
+        hook_max_position = cmdcfg.getint("HookCommands", "EXTENDED_BOUND")
+
+        scoring_right_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
+        scoring_right_trigger.whenPressed(ShootBall(self.robot))
+
+        scoring_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
+        scoring_a_button.whenPressed(PickUpBall(self.robot, 1.0))
+
+        scoring_left_bumper = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
+        scoring_left_bumper.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
+
+        scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
+        scoring_left_trigger.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
