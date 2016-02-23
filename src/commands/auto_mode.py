@@ -63,19 +63,25 @@ class AutoCommandGroup(CommandGroup):
 
 
     def add_commands(self):
+        self._init_alignment_drive = self._obstacle_offset * self._lane_width
+        self._right_angle = self._right_angle * self._direction
         if (self._obstacle_offset != 0):
-            self._init_alignment_drive = self._obstacle_offset * self._lane_width
-            self._right_angle = self._right_angle * self._direction
+        
+            # approach defense command group
             self._approach_defense.addParallel(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
             self._approach_defense.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             self.addSequential(self._approach_defense)
+            
+            # main command group
             self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._alignment_drive, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             self._right_angle = self._right_angle * -1
             self.addSequential(turn_degrees.TurnDegrees(self._robot, self._right_angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+            # todo add DriveEncoderCounts over obstacle
+            
         elif (self._obstacle_offset == 0):
-            self.addSequential(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
-            self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+            self._approach_defense.addSequential(lower_arm_to_count.LowerArm(self._robot, self._arm_lowered_bound, self._arm_lower_speed, None, self._arm_timeout))
+            self._approach_defense.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         #todo correct direction based on gyro?
         #todo distance_to_shooting_line * (enum with pre-determined counts based on target obstacle?) OR "math that shit"
         self.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_shooting_line, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
