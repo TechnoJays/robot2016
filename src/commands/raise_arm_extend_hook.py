@@ -1,4 +1,5 @@
-from wpilib.command.command import CommandGroup, Command
+from wpilib.command.commandgroup import CommandGroup
+from wpilib.command.command import Command
 from commands.raise_arm_to_count import RaiseArmToCount
 from commands.extend_hook_to_count import ExtendHookToCount
 
