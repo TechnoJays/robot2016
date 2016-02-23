@@ -12,7 +12,7 @@ class FeedBallOut(Command):
 
     _time_stamp = 0
 
-    def __init__(self, robot, feed_out_time = 2.0, feederSpeed = 1.0, name=None, timeout=None):
+    def __init__(self, robot,feederSpeed, feed_out_time, name=None, timeout=None):
         '''
         Constructor
         '''
