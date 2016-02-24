@@ -44,13 +44,14 @@ class OI:
     interface to the commands and command groups that allow control of the robot.
     """
     _config=None
+    _command_config = None
     _controllers = []
 
     def __init__(self, robot, configfile='/home/lvuser/configs/joysticks.ini', command_config='/home/lvuser/configs/commands.ini'):
         self.robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
-
+        self._command_config = command_config
         self._init_joystick_binding()
 
         for i in range(2):
@@ -58,8 +59,9 @@ class OI:
 
         self._create_smartdashboard_buttons()
 
+    def setup_button_bindings(self):
         cmdcfg = configparser.ConfigParser()
-        cmdcfg.read(configfile)
+        cmdcfg.read(self._command_config)
 
         arm_max_position = cmdcfg.getint("ArmCommands", "RAISED_BOUND")
         hook_max_position = cmdcfg.getint("HookCommands", "EXTENDED_BOUND")
@@ -67,12 +69,12 @@ class OI:
         scoring_right_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
         scoring_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
         scoring_y_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
-        #scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
+        scoring_left_trigger = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
 
         scoring_right_trigger.whenPressed(ShootBall(self.robot))
         #scoring_y_button.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
         #scoring_a_button.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
-        #scoring_left_trigger.whenPressed(PickUpBall(self.robot, 1.0))
+        scoring_left_trigger.whenPressed(PickUpBall(self.robot, 1.0))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.

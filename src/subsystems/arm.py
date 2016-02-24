@@ -26,7 +26,7 @@ class Arm(Subsystem):
     _left_motor = None
     _right_motor = None
 
-    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/config/commands.ini'):
+    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/configs/commands.ini'):
         self._robot = robot;
         self._subsystem_config = subsystem_config
         self._command_config = command_config
@@ -39,7 +39,7 @@ class Arm(Subsystem):
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._command_config))
         COMMAND_SECTION = "ArmCommands"
-        
+
         back_drive_limit = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_LIMIT")
         back_drive_speed = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_SPEED")
         scaling_factor = config.getfloat(COMMAND_SECTION, "SCALING_FACTOR")

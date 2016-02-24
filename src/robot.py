@@ -10,6 +10,11 @@ from subsystems.hook import Hook
 
 
 class MyRobot(wpilib.IterativeRobot):
+    oi = None
+    drivetrain = None
+    feeder = None
+    arm = None
+    hook = None
 
     def autonomousInit(self):
         #Schedule the autonomous command
@@ -19,10 +24,10 @@ class MyRobot(wpilib.IterativeRobot):
         pass
 
     # Subsystems
-    
+
     def teleopInit(self):
         self.teleopInitialized = True
-        
+
     def disabledInit(self):
         self.disabledInitialized = True
 
@@ -30,13 +35,15 @@ class MyRobot(wpilib.IterativeRobot):
         """
         This function is called upon program startup and
         should be used for any initialization code.
-        """        
+        """
         self.oi = OI(self)
         self.drivetrain = Drivetrain(self)
         self.feeder = Feeder(self)
         self.arm = Arm(self)
         self.hook = Hook(self)
         
+        self.oi.setup_button_bindings()
+
         self.autonomous_command = DoNothing(self)
         #Create the command used for the autonomous period
         #self.autonomous_command = ExampleCommand(self)\

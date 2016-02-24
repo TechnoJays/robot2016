@@ -32,7 +32,7 @@ class TankDrive(Command):
         """Called repeatedly when this Command is scheduled to run"""
         dpad_y = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.DPADY)
         if dpad_y != 0.0:
-            self.robot.drivetrain.arcade_drive(DPAD_LINEAR_SPEED * dpad_y, 0.0)
+            self.robot.drivetrain.arcade_drive(self.DPAD_LINEAR_SPEED * dpad_y, 0.0)
         else:
             left_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.LEFTY)
             right_track = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.RIGHTY)
