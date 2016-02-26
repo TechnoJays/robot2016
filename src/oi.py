@@ -74,7 +74,7 @@ class OI:
         scoring_right_trigger.whenPressed(ShootBall(self.robot))
         #scoring_y_button.whenPressed(RaiseArmExtendHook(self.robot, arm_max_position, hook_max_position))
         #scoring_a_button.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
-        scoring_left_trigger.whenPressed(PickUpBall(self.robot, 1.0))
+        scoring_left_trigger.whenPressed(PickUpBall(self.robot, 1.0, "PickUpBall", 5.0))
 
         #CREATING BUTTONS
         #One type of button is a joystick button which is any button on a joystick.
