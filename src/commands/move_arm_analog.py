@@ -9,7 +9,7 @@ from oi import UserController, JoystickAxis
 
 class MoveArmAnalog(Command):
 
-    def __init__(self, robot, speed_scaling_factor, back_drive_limit, back_drive_speed, raise_stop_count, name=None, timeout=None):
+    def __init__(self, robot, speed_scaling_factor, back_drive_speed, back_drive_limit, raise_stop_count, name=None, timeout=None):
         '''
         Constructor
         '''
@@ -30,8 +30,8 @@ class MoveArmAnalog(Command):
         move_speed = self._robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTY) * self._scaling_factor;
         arm_count = self._robot.arm.get_encoder_value()
         if move_speed == 0:
-            if self._back_drive_limit <= arm_count <= self._raise_stop_count:
-                move_speed = -1.0 * self._back_drive_speed * (1 - (self._back_drive_limit - arm_count))/self._back_drive_limit
+            if self._raise_stop_count <= arm_count <= self._back_drive_limit:
+                move_speed = -1.0 * self._back_drive_speed * (1 - (self._back_drive_limit - arm_count)/self._back_drive_limit)
         self._robot.arm.move_arm(move_speed)
 
     def isFinished(self):

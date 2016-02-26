@@ -58,7 +58,7 @@ class Drivetrain(Subsystem):
     def __init__(self, robot, name = None, configfile = '/home/lvuser/configs/subsystems.ini'):
         self._robot = robot;
         self._config = configparser.ConfigParser()
-        self._config.read(os.path.join(os.getcwd(), configfile))
+        self._config.read(configfile)
         self._load_general_config()
         self._init_components()
         self._update_smartdashboard_sensors()

@@ -21,7 +21,7 @@ class FeedBallOut(Command):
         self._feed_out_time_seconds = feed_out_time
         self._feeder_speed = feederSpeed
         self.robot = robot
-        self.requires(robot.feeder.Class)
+        self.requires(robot.feeder)
 
     def initialize(self):
         """Called before the Command is run for the first time."""

@@ -9,7 +9,7 @@ from oi import JoystickAxis, UserController
 
 
 class FeedBallAnalog(Command):
-    
+
     def __init__(self, robot, max_speed, name=None, timeout=None):
         '''
         Constructor
@@ -26,7 +26,7 @@ class FeedBallAnalog(Command):
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
         speed = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY)
-        self.robot.feeder.spinFeeder(self._max_speedspeed)
+        self.robot.feeder.spinFeeder(self._max_pickup_speed * speed)
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""

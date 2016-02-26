@@ -41,7 +41,7 @@ class Feeder(Subsystem):
         super().__init__(name = name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(FeedBallAnalog(self._robot))
+        self.setDefaultCommand(FeedBallAnalog(self._robot, 1.0))
 
     def spinFeeder(self, speed):
         """Spins the feeder in the given direction at a speed represented as a float"""
@@ -56,7 +56,7 @@ class Feeder(Subsystem):
 
     def hasBall(self):
         if (self._switch):
-            self._has_ball = self._switch.get()
+            self._has_ball = not self._switch.get()
         return self._has_ball
 
     def _update_smartdashboard(self, speed):
@@ -64,7 +64,7 @@ class Feeder(Subsystem):
         SmartDashboard.putNumber("Feeder Speed", speed)
 
     def _init_components(self):
-        
+
         if (self._config.getboolean(Feeder.motor_section, "MOTOR_ENABLED")):
             self._motor_channel = self._config.getint(self.motor_section, "MOTOR_CHANNEL")
             self._motor_inverted = self._config.getboolean(self.motor_section, "MOTOR_INVERTED")

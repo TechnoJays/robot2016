@@ -8,9 +8,7 @@ import os
 
 from wpilib.command.subsystem import Subsystem
 from wpilib.encoder import Encoder
-from wpilib.robotdrive import RobotDrive
 from wpilib.smartdashboard import SmartDashboard
-from wpilib.talon import Talon
 from wpilib.victor import Victor
 
 from commands.move_arm_analog import MoveArmAnalog
@@ -26,7 +24,7 @@ class Arm(Subsystem):
     _left_motor = None
     _right_motor = None
 
-    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/config/commands.ini'):
+    def __init__(self, robot, speed_ratio=0.5, name=None, subsystem_config = '/home/lvuser/configs/subsystems.ini', command_config = '/home/lvuser/configs/commands.ini'):
         self._robot = robot;
         self._subsystem_config = subsystem_config
         self._command_config = command_config
@@ -39,13 +37,13 @@ class Arm(Subsystem):
         config = configparser.ConfigParser()
         config.read(os.path.join(os.getcwd(), self._command_config))
         COMMAND_SECTION = "ArmCommands"
-        
+
         back_drive_limit = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_LIMIT")
-        back_drive_speed = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_SPEED")
-        scaling_factor = config.getfloat(COMMAND_SECTION, "SCALING_FACTOR")
-        raised_bound = config.getint(COMMAND_SECTION, "RAISED_BOUND")
-        self.setDefaultCommand(MoveArmAnalog(self._robot, scaling_factor, back_drive_speed,
-                                             back_drive_limit, raised_bound))
+        max_back_drive_speed = config.getfloat(COMMAND_SECTION, "BACK_DRIVE_SPEED")
+        back_drive_target = config.getint(COMMAND_SECTION, "BACK_DRIVE_TARGET")
+        max_control_speed = config.getfloat(COMMAND_SECTION, "SCALING_FACTOR")
+        self.setDefaultCommand(MoveArmAnalog(self._robot, max_control_speed, max_back_drive_speed,
+                                             back_drive_limit, back_drive_target))
 
     def move_arm(self, speed):
         if self._left_motor:
