@@ -11,7 +11,7 @@ from wpilib.smartdashboard import SmartDashboard
 import configparser
 from commands import lower_arm_to_count, turn_degrees, feed_ball_out, \
     drive_encoder_counts, extend_hook_to_count, turn_degrees_absolute
-from math import sqrt
+import math
 
 class AutoCommandGroup(CommandGroup):
     '''
@@ -110,9 +110,9 @@ class AutoCommandGroup(CommandGroup):
         
     def add_score_commands(self):
         # calculate angle of hyp/adj
-        angle = self.math.degrees(self.math.atan(self._target_point / self._lane_width))
+        angle = math.degrees(math.atan(self._target_point / self._lane_width))
         # calculate length of hyp
-        hypotenuse = sqrt((self._target_point ** 2) + (self._lane_width ** 2))
+        hypotenuse = math.sqrt((self._target_point ** 2) + (self._lane_width ** 2))
         
         '''
         this if statement is ugly af. is there a better way to accomplish this?
