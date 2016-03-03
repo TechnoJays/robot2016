@@ -114,6 +114,10 @@ class AutoCommandGroup(CommandGroup):
         # calculate length of hyp
         hypotenuse = sqrt((self._target_point ** 2) + (self._lane_width ** 2))
         
+        '''
+        this if statement is ugly af. is there a better way to accomplish this?
+        '''
+        
         if (self._target_obstacle == 1 or self._target_obstacle == 4):
             # turn to the right at [angle]
             self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
