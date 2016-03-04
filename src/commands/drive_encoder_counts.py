@@ -38,9 +38,9 @@ class DriveEncoderCounts(Command):
         distance_left = self._target_position - current
         # Determine direction using target and current encoder values
         if (distance_left) >= 0:
-            direction = 1.0
-        else:
             direction = -1.0
+        else:
+            direction = 1.0
         linear_drive_amount = self._speed * direction
         if (distance_left < self._ramp_threshold):
             linear_drive_amount = linear_drive_amount * (distance_left) / self._ramp_threshold
