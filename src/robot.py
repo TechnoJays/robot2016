@@ -19,10 +19,11 @@ class MyRobot(wpilib.IterativeRobot):
 
     def autonomousInit(self):
         #Schedule the autonomous command
-        start_obs = self.oi.get_obstacles("Starting_Obstacle")
-        target_obs = self.oi.get_obstacles("Target_Obstacle")
-        return_obs = self.oi.get_obstacles("Return_Obstacle")
-        self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
+        #start_obs = self.oi.get_obstacles("Starting_Obstacle")
+        #target_obs = self.oi.get_obstacles("Target_Obstacle")
+        #return_obs = self.oi.get_obstacles("Return_Obstacle")
+        self.drivetrain.reset_gyro_angle()
+        #self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
         self.autonomous_command.start()
 
     def testInit(self):
@@ -46,7 +47,7 @@ class MyRobot(wpilib.IterativeRobot):
         self.feeder = Feeder(self)
         self.arm = Arm(self)
         self.hook = Hook(self)
-        
+
         self.oi.setup_button_bindings()
 
         self.autonomous_command = AutoCommandGroup(self)

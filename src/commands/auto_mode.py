@@ -59,8 +59,8 @@ class AutoCommandGroup(CommandGroup):
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_commands()
-        self.robot.drivetrain.reset_gyro_angle()
 
+        self.set_match_configuration(1, 1, 1)
         self.add_approach_commands()
         #self.add_cross_commands()
         #self.add_score_commands()
