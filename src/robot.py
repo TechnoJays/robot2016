@@ -19,12 +19,13 @@ class MyRobot(wpilib.IterativeRobot):
 
     def autonomousInit(self):
         #Schedule the autonomous command
-        #start_obs = self.oi.get_obstacles("Starting_Obstacle")
-        #target_obs = self.oi.get_obstacles("Target_Obstacle")
-        #return_obs = self.oi.get_obstacles("Return_Obstacle")
         self.drivetrain.reset_gyro_angle()
-        #self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
-        if self.oi.get_auto_choice() == 2:
+        if self.oi.get_auto_choice() == 1:
+            start_obs = self.oi.get_obstacles("Starting_Obstacle")
+            target_obs = self.oi.get_obstacles("Target_Obstacle")
+            return_obs = self.oi.get_obstacles("Return_Obstacle")
+            self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
+        else:
             self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
 

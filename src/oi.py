@@ -81,33 +81,6 @@ class OI:
         #scoring_a_button.whenPressed(RetractHookToCount(self.robot, 1.0, 0))
         scoring_left_trigger.whenPressed(PickUpBall(self.robot, 1.0, "PickUpBall", 5.0))
 
-        #CREATING BUTTONS
-        #One type of button is a joystick button which is any button on a joystick.
-        #You create one by telling it which joystick it's on and which button
-        #number it is.
-        #stick = wpilib.Joystick(port)
-        #button = buttons.JoystickButton(stick, button_number)
-
-        #There are a few additional built-in buttons you can use. Additionally, by
-        #subclassing Button you can create custom triggers and bind those to
-        #commands the same as any other Button
-
-        #TRIGGERING COMMANDS WITH BUTTONS
-        #Once you have a button, it's trivial to bind it to a button in one of
-        #three ways;
-
-        #Start the command when the button is pressed and let it run the command
-        #until it is finished as determined by it's isFinished method.
-        #button.whenPressed(ExampleCommand())
-
-        #Run the command while the button is being held down and interrupt it
-        #once the button is released
-        #button.whileHeld(ExampleCommand())
-
-        #Start the command when the button is released and let it run the command
-        #until it is finished as determined by it's isFinished method.
-        #button.whenReleased(ExampleCommand())
-
     def get_axis(self, user, axis):
         """Read axis value for specified controller/axis.
 
@@ -151,47 +124,27 @@ class OI:
         self._auto_program_chooser.addObject("Do Nothing", 2)
         SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 
-        #self._starting_chooser = SendableChooser()
-        #self._starting_chooser.addDefault("1", 1)
-        #self._starting_chooser.addObject("2", 2)
-        #self._starting_chooser.addObject("3", 3)
-        #self._starting_chooser.addObject("4", 4)
-        #self._starting_chooser.addObject("5", 5)
-        #SmartDashboard.putData("Starting_Obstacle", self._starting_chooser)
-        #self._target_chooser = SendableChooser()
-        #self._target_chooser.addDefault("1", 1)
-        #self._target_chooser.addObject("2", 2)
-        #self._target_chooser.addObject("3", 3)
-        #self._target_chooser.addObject("4", 4)
-        #self._target_chooser.addObject("5", 5)
-        #SmartDashboard.putData("Target_Obstacle", self._target_chooser)
-        #self._return_chooser = SendableChooser()
-        #self._return_chooser.addDefault("1", 1)
-        #self._return_chooser.addObject("2", 2)
-        #self._return_chooser.addObject("3", 3)
-        #self._return_chooser.addObject("4", 4)
-        #self._return_chooser.addObject("5", 5)
-        #SmartDashboard.putData("Return_Obstacle", self._return_chooser)
-        #SmartDashboard.putData("DriveEncoderCounts",
-        #    drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
-        #SmartDashboard.putData("DriveTime",
-        #    drive_time.DriveTime(self.robot, 2.0, 1.0, 0.3))
-        #SmartDashboard.putData("ExtendHookToCount",
-        #    extend_hook_to_count.ExtendHookToCount(self.robot, 1.0, 50))
-        #SmartDashboard.putData("FeedBallOut",
-        #    feed_ball_out.FeedBallOut(self.robot, 1.0, 1.0))
-        #SmartDashboard.putData("LowerArmToCount",
-        #    lower_arm_to_count.LowerArm(self.robot, 0, 1.0))
-        #SmartDashboard.putData("PickUpBall",
-        #    pick_up_ball.PickUpBall(self.robot, 0.5))
-        #SmartDashboard.putData("RaiseArmToCount",
-        #    raise_arm_to_count.RaiseArmToCount(self.robot, 1.0, 50))
-        #SmartDashboard.putData("RetractHookToCount",
-        #    retract_hook_to_count.RetractHookToCount(self.robot, 1.0, 0))
-        #SmartDashboard.putData("TurnDegrees",
-        #    turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
-        #SmartDashboard.putData("TurnTime",
-        #    turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
+        self._starting_chooser = SendableChooser()
+        self._starting_chooser.addDefault("1", 1)
+        self._starting_chooser.addObject("2", 2)
+        self._starting_chooser.addObject("3", 3)
+        self._starting_chooser.addObject("4", 4)
+        self._starting_chooser.addObject("5", 5)
+        SmartDashboard.putData("Starting_Obstacle", self._starting_chooser)
+        self._target_chooser = SendableChooser()
+        self._target_chooser.addDefault("1", 1)
+        self._target_chooser.addObject("2", 2)
+        self._target_chooser.addObject("3", 3)
+        self._target_chooser.addObject("4", 4)
+        self._target_chooser.addObject("5", 5)
+        SmartDashboard.putData("Target_Obstacle", self._target_chooser)
+        self._return_chooser = SendableChooser()
+        self._return_chooser.addDefault("1", 1)
+        self._return_chooser.addObject("2", 2)
+        self._return_chooser.addObject("3", 3)
+        self._return_chooser.addObject("4", 4)
+        self._return_chooser.addObject("5", 5)
+        SmartDashboard.putData("Return_Obstacle", self._return_chooser)
         pass
 
     def get_auto_choice(self):

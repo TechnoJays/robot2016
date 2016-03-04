@@ -61,12 +61,6 @@ class AutoCommandGroup(CommandGroup):
         self._config.read(configfile)
         self._init_commands()
 
-        self.set_match_configuration(1, 1, 1)
-        self.add_approach_commands()
-        #self.add_cross_commands()
-        #self.add_score_commands()
-        #self.add_return_commands()
-
     def set_match_configuration(self, starting_obs, target_obs, return_obs):
         self._starting_obstacle = starting_obs
         self._target_obstacle = target_obs
@@ -78,6 +72,10 @@ class AutoCommandGroup(CommandGroup):
             self._obstacle_direction = -1
         elif (self._target_obstacle == self._starting_obstacle):
             self._obstacle_direction = 0
+        self.add_approach_commands()
+        #self.add_cross_commands()
+        #self.add_score_commands()
+        #self.add_return_commands()
 
     def add_approach_commands(self):
         # lower arm
