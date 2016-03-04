@@ -63,9 +63,9 @@ class AutoCommandGroup(CommandGroup):
         self._set_match_configuration()
         
         self.add_approach_commands()
-        self.add_cross_commands()
-        self.add_score_commands()
-        self.add_return_commands()
+        #self.add_cross_commands()
+        #self.add_score_commands()
+        #self.add_return_commands()
 
     def _set_match_configuration(self):
         self._starting_obstacle = SmartDashboard.getNumber("Starting Obstacle")
