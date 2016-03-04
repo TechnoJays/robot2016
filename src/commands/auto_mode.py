@@ -55,6 +55,7 @@ class AutoCommandGroup(CommandGroup):
     _return_commands = CommandGroup()
 
     def __init__(self, robot, configfile="/home/lvuser/configs/auto.ini"):
+        super().__init__()
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
