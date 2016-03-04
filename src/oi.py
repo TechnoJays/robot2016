@@ -61,7 +61,7 @@ class OI:
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
 
-        self._create_smartdashboard_buttons()
+        #self._create_smartdashboard_buttons()
 
     def setup_button_bindings(self):
         cmdcfg = configparser.ConfigParser()
@@ -186,9 +186,9 @@ class OI:
         #    turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
         #SmartDashboard.putData("TurnTime",
         #    turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
-        
+
         pass
-    
+
     def get_obstacles(self, obstacle):
         value = 1
         if (obstacle == "Starting_Obstacle"):
@@ -197,7 +197,7 @@ class OI:
             value = self._target_chooser.getSelected()
         elif (obstacle == "Return_Obstacle"):
             value = self._return_chooser.getSelected()
-            
+
         return value
 
     def _init_joystick(self, driver):

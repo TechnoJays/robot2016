@@ -185,8 +185,8 @@ class AutoCommandGroup(CommandGroup):
         self._feed_time = self._config.getfloat(self._feeder_section, "FEED_TIME")
 
         # arm
-        self._lower_bound = self._config.getint(self._feeder_section, "LOWER_BOUND")
-        self._lower_speed = self._config.getfloat(self._feeder_section, "LOWER_SPEED")
+        self._lower_bound = self._config.getint(self._arm_section, "LOWER_BOUND")
+        self._lower_speed = self._config.getfloat(self._arm_section, "LOWER_SPEED")
 
         # hook
         self._extend_speed = self._config.getfloat(self._hook_section, "EXTEND_SPEED")
