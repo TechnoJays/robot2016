@@ -24,6 +24,8 @@ class MyRobot(wpilib.IterativeRobot):
         #return_obs = self.oi.get_obstacles("Return_Obstacle")
         self.drivetrain.reset_gyro_angle()
         #self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
+        if self.oi.get_auto_choice() == 2:
+            self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
 
     def testInit(self):

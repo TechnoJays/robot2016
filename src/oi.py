@@ -50,6 +50,7 @@ class OI:
     _starting_chooser = None
     _target_chooser = None
     _return_chooser = None
+    _auto_program_chooser = None
 
     def __init__(self, robot, configfile='/home/lvuser/configs/joysticks.ini', command_config='/home/lvuser/configs/commands.ini'):
         self.robot = robot
@@ -61,7 +62,7 @@ class OI:
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
 
-        #self._create_smartdashboard_buttons()
+        self._create_smartdashboard_buttons()
 
     def setup_button_bindings(self):
         cmdcfg = configparser.ConfigParser()
@@ -145,27 +146,32 @@ class OI:
         return value
 
     def _create_smartdashboard_buttons(self):
-        self._starting_chooser = SendableChooser()
-        self._starting_chooser.addDefault("1", 1)
-        self._starting_chooser.addObject("2", 2)
-        self._starting_chooser.addObject("3", 3)
-        self._starting_chooser.addObject("4", 4)
-        self._starting_chooser.addObject("5", 5)
-        SmartDashboard.putData("Starting_Obstacle", self._starting_chooser)
-        self._target_chooser = SendableChooser()
-        self._target_chooser.addDefault("1", 1)
-        self._target_chooser.addObject("2", 2)
-        self._target_chooser.addObject("3", 3)
-        self._target_chooser.addObject("4", 4)
-        self._target_chooser.addObject("5", 5)
-        SmartDashboard.putData("Target_Obstacle", self._target_chooser)
-        self._return_chooser = SendableChooser()
-        self._return_chooser.addDefault("1", 1)
-        self._return_chooser.addObject("2", 2)
-        self._return_chooser.addObject("3", 3)
-        self._return_chooser.addObject("4", 4)
-        self._return_chooser.addObject("5", 5)
-        SmartDashboard.putData("Return_Obstacle", self._return_chooser)
+        self._auto_program_chooser = SendableChooser()
+        self._auto_program_chooser.addDefault("Default", 1)
+        self._auto_program_chooser.addObject("Do Nothing", 2)
+        SmartDashboard.putData("Autonomous", self._auto_program_chooser)
+
+        #self._starting_chooser = SendableChooser()
+        #self._starting_chooser.addDefault("1", 1)
+        #self._starting_chooser.addObject("2", 2)
+        #self._starting_chooser.addObject("3", 3)
+        #self._starting_chooser.addObject("4", 4)
+        #self._starting_chooser.addObject("5", 5)
+        #SmartDashboard.putData("Starting_Obstacle", self._starting_chooser)
+        #self._target_chooser = SendableChooser()
+        #self._target_chooser.addDefault("1", 1)
+        #self._target_chooser.addObject("2", 2)
+        #self._target_chooser.addObject("3", 3)
+        #self._target_chooser.addObject("4", 4)
+        #self._target_chooser.addObject("5", 5)
+        #SmartDashboard.putData("Target_Obstacle", self._target_chooser)
+        #self._return_chooser = SendableChooser()
+        #self._return_chooser.addDefault("1", 1)
+        #self._return_chooser.addObject("2", 2)
+        #self._return_chooser.addObject("3", 3)
+        #self._return_chooser.addObject("4", 4)
+        #self._return_chooser.addObject("5", 5)
+        #SmartDashboard.putData("Return_Obstacle", self._return_chooser)
         #SmartDashboard.putData("DriveEncoderCounts",
         #    drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
         #SmartDashboard.putData("DriveTime",
@@ -186,8 +192,10 @@ class OI:
         #    turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
         #SmartDashboard.putData("TurnTime",
         #    turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
-
         pass
+
+    def get_auto_choice(self):
+        return self._auto_program_chooser.getSelected()
 
     def get_obstacles(self, obstacle):
         value = 1
