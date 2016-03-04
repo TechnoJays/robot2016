@@ -10,6 +10,7 @@ from commands.pick_up_ball import PickUpBall
 from commands.retract_hook_to_count import RetractHookToCount
 from commands.raise_arm_extend_hook import RaiseArmExtendHook
 from commands.shoot_ball import ShootBall
+from wpilib.sendablechooser import SendableChooser
 
 class JoystickAxis(object):
     """Enumerates joystick axis."""
@@ -46,6 +47,9 @@ class OI:
     _config=None
     _command_config = None
     _controllers = []
+    _starting_chooser = None
+    _target_chooser = None
+    _return_chooser = None
 
     def __init__(self, robot, configfile='/home/lvuser/configs/joysticks.ini', command_config='/home/lvuser/configs/commands.ini'):
         self.robot = robot
@@ -141,6 +145,27 @@ class OI:
         return value
 
     def _create_smartdashboard_buttons(self):
+        self._starting_chooser = SendableChooser()
+        self._starting_chooser.addDefault("1", 1)
+        self._starting_chooser.addObject("2", 2)
+        self._starting_chooser.addObject("3", 3)
+        self._starting_chooser.addObject("4", 4)
+        self._starting_chooser.addObject("5", 5)
+        SmartDashboard.putData("Starting_Obstacle", self._starting_chooser)
+        self._target_chooser = SendableChooser()
+        self._target_chooser.addDefault("1", 1)
+        self._target_chooser.addObject("2", 2)
+        self._target_chooser.addObject("3", 3)
+        self._target_chooser.addObject("4", 4)
+        self._target_chooser.addObject("5", 5)
+        SmartDashboard.putData("Target_Obstacle", self._target_chooser)
+        self._return_chooser = SendableChooser()
+        self._return_chooser.addDefault("1", 1)
+        self._return_chooser.addObject("2", 2)
+        self._return_chooser.addObject("3", 3)
+        self._return_chooser.addObject("4", 4)
+        self._return_chooser.addObject("5", 5)
+        SmartDashboard.putData("Return_Obstacle", self._return_chooser)
         #SmartDashboard.putData("DriveEncoderCounts",
         #    drive_encoder_counts.DriveEncoderCounts(self.robot, 100, 1.0, 10, 30))
         #SmartDashboard.putData("DriveTime",
@@ -161,7 +186,19 @@ class OI:
         #    turn_degrees.TurnDegrees(self.robot, 90.0, 0.5, 5.0, 10.0))
         #SmartDashboard.putData("TurnTime",
         #    turn_time.TurnTime(self.robot, 1.0, 0.5, 0.3))
+        
         pass
+    
+    def get_obstacles(self, obstacle):
+        value = 1
+        if (obstacle == "Starting_Obstacle"):
+            value = self._starting_chooser.getSelected()
+        elif (obstacle == "Target_Obstacle"):
+            value = self._target_chooser.getSelected()
+        elif (obstacle == "Return_Obstacle"):
+            value = self._return_chooser.getSelected()
+            
+        return value
 
     def _init_joystick(self, driver):
         config_section = "JoyConfig" + str(driver)

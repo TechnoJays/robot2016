@@ -68,9 +68,9 @@ class AutoCommandGroup(CommandGroup):
         #self.add_return_commands()
 
     def _set_match_configuration(self):
-        self._starting_obstacle = SmartDashboard.getNumber("Starting Obstacle")
-        self._target_obstacle = SmartDashboard.getNumber("Target Obstacle")
-        self._return_obstacle = SmartDashboard.getNumber("Return Obstacle")
+        self._starting_obstacle = self._robot.oi.get_obstacles("Starting_Obstacle")
+        self._target_obstacle = self._robot.oi.get_obstacles("Target_Obstacle")
+        self._return_obstacle = self._robot.oi.get_obstacles("Return_Obstacle")
         self._obstacle_offset = abs(self._target_obstacle - self._starting_obstacle)
         if (self._target_obstacle > self._starting_obstacle):
             self._obstacle_direction = 1
