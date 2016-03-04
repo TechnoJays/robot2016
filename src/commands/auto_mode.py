@@ -154,18 +154,11 @@ class AutoCommandGroup(CommandGroup):
     def add_return_commands(self):
         # todo: drive to return obstacle
         # turn around
-        self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 180, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 180, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         # return to target point
-        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         # 
-        if (self._return_obstacle == 1 or self._return_obstacle == 4):
-            
-        
-        
-        
-        
-        
-        
+    
         if (self._target_obstacle == 1 or self._target_obstacle == 2 or self._target_obstacle == 3):
             # turn to face obstacles
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 135, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
