@@ -80,7 +80,7 @@ class AutoCommandGroup(CommandGroup):
 
     def add_approach_commands(self):
         # lower arm
-        self._approach_commands.addParallel(lower_arm_to_count.LowerArm(self._robot, self._lowered_bound, self._lower_speed))
+        self._approach_commands.addParallel(lower_arm_to_count.LowerArm(self._robot, self._lower_bound, self._lower_speed))
         # extend hook
         #self._approach_commands.addParallel(extend_hook_to_count.ExtendHookToCount(self._robot, self._extend_speed, self._raise_stop_count))
 
