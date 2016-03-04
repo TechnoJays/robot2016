@@ -7,6 +7,7 @@ from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
 from subsystems.feeder import Feeder
 from subsystems.hook import Hook
+from commands.auto_mode import AutoCommandGroup
 
 
 class MyRobot(wpilib.IterativeRobot):
@@ -18,6 +19,10 @@ class MyRobot(wpilib.IterativeRobot):
 
     def autonomousInit(self):
         #Schedule the autonomous command
+        start_obs = self.oi.get_obstacles("Starting_Obstacle")
+        target_obs = self.oi.get_obstacles("Target_Obstacle")
+        return_obs = self.oi.get_obstacles("Return_Obstacle")
+        self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
         self.autonomous_command.start()
 
     def testInit(self):
@@ -44,7 +49,7 @@ class MyRobot(wpilib.IterativeRobot):
         
         self.oi.setup_button_bindings()
 
-        self.autonomous_command = DoNothing(self)
+        self.autonomous_command = AutoCommandGroup(self)
         #Create the command used for the autonomous period
         #self.autonomous_command = ExampleCommand(self)\
 

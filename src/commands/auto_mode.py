@@ -54,23 +54,22 @@ class AutoCommandGroup(CommandGroup):
     _score_commands = CommandGroup()
     _return_commands = CommandGroup()
 
-    def __init__(self, robot, start_position, target_obstacle, configfile="/home/lvuser/configs/auto.ini"):
+    def __init__(self, robot, configfile="/home/lvuser/configs/auto.ini"):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_commands()
         self.robot.drivetrain.reset_gyro_angle()
-        self._set_match_configuration()
         
         self.add_approach_commands()
         #self.add_cross_commands()
         #self.add_score_commands()
         #self.add_return_commands()
 
-    def _set_match_configuration(self):
-        self._starting_obstacle = self._robot.oi.get_obstacles("Starting_Obstacle")
-        self._target_obstacle = self._robot.oi.get_obstacles("Target_Obstacle")
-        self._return_obstacle = self._robot.oi.get_obstacles("Return_Obstacle")
+    def set_match_configuration(self, starting_obs, target_obs, return_obs):
+        self._starting_obstacle = starting_obs
+        self._target_obstacle = target_obs
+        self._return_obstacle = return_obs
         self._obstacle_offset = abs(self._target_obstacle - self._starting_obstacle)
         if (self._target_obstacle > self._starting_obstacle):
             self._obstacle_direction = 1
@@ -109,9 +108,9 @@ class AutoCommandGroup(CommandGroup):
         self.addSequential(self._cross_commands)
         
     def add_score_commands(self):
-        # calculate angle of hyp/adj
+        # angle of hyp/adj
         angle = math.degrees(math.atan(self._target_point / self._lane_width))
-        # calculate length of hyp
+        # length of hyp
         hypotenuse = math.sqrt((self._target_point ** 2) + (self._lane_width ** 2))
         
         '''
@@ -123,7 +122,7 @@ class AutoCommandGroup(CommandGroup):
             self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, angle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
             # drive to the target point along hyp
             self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, hypotenuse, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
-            # vvvvv 45 is the angle of the goal relative to the back wall
+            # assuming 45 is the angle of the goal relative to the back wall?
             if (self._target_obstacle == 1):
                 # turned [angle] toward goal, turn remainder of 45
                 self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, (45 - angle), self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
@@ -155,6 +154,18 @@ class AutoCommandGroup(CommandGroup):
     def add_return_commands(self):
         # todo: drive to return obstacle
         # turn around
+        self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 180, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # return to target point
+        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # 
+        if (self._return_obstacle == 1 or self._return_obstacle == 4):
+            
+        
+        
+        
+        
+        
+        
         if (self._target_obstacle == 1 or self._target_obstacle == 2 or self._target_obstacle == 3):
             # turn to face obstacles
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 135, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
