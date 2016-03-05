@@ -10,7 +10,7 @@ from wpilib.command import CommandGroup
 from wpilib.smartdashboard import SmartDashboard
 import configparser
 from commands import lower_arm_to_count, turn_degrees, feed_ball_out, \
-    drive_encoder_counts, extend_hook_to_count, turn_degrees_absolute
+    drive_encoder_counts, extend_hook_to_count, turn_degrees_absolute, shoot_ball
 import math
 
 class AutoCommandGroup(CommandGroup):
@@ -104,7 +104,7 @@ class AutoCommandGroup(CommandGroup):
         # cross the obstacle
         self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._cross_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # re-center
-        self._cross_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._speed, self._drivetrain_threshold), self._default_timeout)
+        self._cross_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._cross_commands)
 
     def add_score_commands(self):
@@ -145,7 +145,7 @@ class AutoCommandGroup(CommandGroup):
         # drive toward goal
         #self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # shoot
-        self._score_commands.addSequential(feed_ball_out.FeedBallOut(self._robot, self._feeder_speed, self._feed_time), self._default_timeout)
+        self._score_commands.addSequential(shoot_ball.ShootBall(self._robot), self._default_timeout)
         self.addSequential(self._score_commands)
 
     def add_return_commands(self):
@@ -165,7 +165,7 @@ class AutoCommandGroup(CommandGroup):
             # MAGIC NUMBERS
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, -135, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # drive to obstacles
-        self._return_commands.addSexquential(drive_encoder_counts.DriveEncoderCounts(self._robot, -2300, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -2300, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._return_commands)
 
     def _init_commands(self):
