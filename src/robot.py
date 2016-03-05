@@ -35,6 +35,7 @@ class MyRobot(wpilib.IterativeRobot):
     # Subsystems
 
     def teleopInit(self):
+        self.autonomous_command.cancel()
         self.teleopInitialized = True
 
     def disabledInit(self):
