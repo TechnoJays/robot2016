@@ -79,7 +79,7 @@ class AutoCommandGroup(CommandGroup):
 
     def add_approach_commands(self):
         # lower arm
-        self._approach_commands.addParallel(lower_arm_to_count.LowerArm(self._robot, self._lower_bound, self._lower_speed), self._default_timeout)
+        self._approach_commands.addSequential(lower_arm_to_count.LowerArm(self._robot, self._lower_bound, self._lower_speed), self._default_timeout)
         # extend hook
         #self._approach_commands.addParallel(extend_hook_to_count.ExtendHookToCount(self._robot, self._extend_speed, self._raise_stop_count))
 
@@ -96,7 +96,7 @@ class AutoCommandGroup(CommandGroup):
 
         # drive to obstacle line
         # magic number
-        self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, 0.5, self._drivetrain_threshold), self._default_timeout)
+        self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
 
         self.addSequential(self._approach_commands)
 
