@@ -74,8 +74,8 @@ class AutoCommandGroup(CommandGroup):
             self._obstacle_direction = 0
         self.add_approach_commands()
         self.add_cross_commands()
-        #self.add_score_commands()
-        #self.add_return_commands()
+        self.add_score_commands()
+        self.add_return_commands()
 
     def add_approach_commands(self):
         # lower arm
@@ -96,8 +96,6 @@ class AutoCommandGroup(CommandGroup):
 
         # drive to obstacle line
         self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
-        # TODO: MAGIC NUMBER!!! OMG!1!1!!
-        #self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -800, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
 
         self.addSequential(self._approach_commands)
 
@@ -117,13 +115,14 @@ class AutoCommandGroup(CommandGroup):
 
         if (self._target_obstacle == 1 or self._target_obstacle == 4):
             # turn to the right at [angle]
-            self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, angle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+            # self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, angle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
             # drive to the target point along hyp
-            self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, hypotenuse, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+            # MAGIC NUMBERS
+            self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 2000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
             # assuming 45 is the angle of the goal relative to the back wall?
             if (self._target_obstacle == 1):
                 # turned [angle] toward goal, turn remainder of 45
-                self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, (45 - angle), self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+                self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 45, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
             elif (self._target_obstacle == 4):
                 # turned away from goal by [angle], undo that turn then turn another -45 to face goal
                 self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, ((angle * -1) - 45), self._auto_speed, self._drivetrain_threshold), self._default_timeout)
@@ -144,7 +143,7 @@ class AutoCommandGroup(CommandGroup):
             # turn to face goal
             self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, (angle + 45), self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # drive toward goal
-        self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        #self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._shoot_point, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # shoot
         self._score_commands.addSequential(feed_ball_out.FeedBallOut(self._robot, self._feeder_speed, self._feed_time), self._default_timeout)
         self.addSequential(self._score_commands)
@@ -159,12 +158,14 @@ class AutoCommandGroup(CommandGroup):
 
         if (self._target_obstacle == 1 or self._target_obstacle == 2 or self._target_obstacle == 3):
             # turn to face obstacles
-            self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, 135, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+            # MAGIC NUMBERS
+            self._return_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         elif (self._target_obstacle == 4 or self._target_obstacle == 5):
             # turn to face obstaclces
+            # MAGIC NUMBERS
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, -135, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # drive to obstacles
-        self._return_commands.addSexquential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._target_point, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        self._return_commands.addSexquential(drive_encoder_counts.DriveEncoderCounts(self._robot, -2300, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._return_commands)
 
     def _init_commands(self):
