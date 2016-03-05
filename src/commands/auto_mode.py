@@ -96,6 +96,8 @@ class AutoCommandGroup(CommandGroup):
 
         # drive to obstacle line
         self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        # TODO: MAGIC NUMBER!!! OMG!1!1!!
+        self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -500, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         self.addSequential(self._approach_commands)
 
     def add_cross_commands(self):
@@ -165,7 +167,7 @@ class AutoCommandGroup(CommandGroup):
             # turn to face obstaclces
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, -135, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         # drive to obstacles
-        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._target_point, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
+        self._return_commands.addSexquential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._target_point, self._auto_speed, self._drivetrain_threshold, self._drivetrain_ramp_threshold))
         self.addSequential(self._return_commands)
 
     def _init_commands(self):
@@ -190,3 +192,14 @@ class AutoCommandGroup(CommandGroup):
         # hook
         self._extend_speed = self._config.getfloat(self._hook_section, "EXTEND_SPEED")
         self._raise_stop_count = self._config.getint(self._hook_section, "RAISE_STOP_COUNT")
+
+    def end(self):
+        """Called once after isFinished returns true"""
+        self._robot.drivetrain.arcade_drive(0,0)
+        self._robot.feeder.spinFeeder(0)
+        self._robot.hook.move_hook(0)
+        self._robot.arm.move_arm(0)
+
+    def interrupted(self):
+        """Called when another command which requires one or more of the same subsystems is scheduled to run"""
+        self.end()

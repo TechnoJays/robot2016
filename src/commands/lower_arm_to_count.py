@@ -7,8 +7,8 @@ from wpilib.command.command import Command
 
 
 class LowerArm(Command):
-    
-    def __init__(self, robot, stop_count, lower_speed, name=None, timeout=None):
+
+    def __init__(self, robot, stop_count, lower_speed, name=None, timeout=10):
         '''
         Constructor
         '''

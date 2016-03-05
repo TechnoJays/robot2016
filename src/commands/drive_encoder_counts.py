@@ -11,7 +11,7 @@ class DriveEncoderCounts(Command):
     _target_position = None
     _ramp_threshold = None
 
-    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=None):
+    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=10):
         '''
         Constructor
         '''
