@@ -73,7 +73,7 @@ class AutoCommandGroup(CommandGroup):
         elif (self._target_obstacle == self._starting_obstacle):
             self._obstacle_direction = 0
         self.add_approach_commands()
-        #self.add_cross_commands()
+        self.add_cross_commands()
         #self.add_score_commands()
         #self.add_return_commands()
 
@@ -97,7 +97,7 @@ class AutoCommandGroup(CommandGroup):
         # drive to obstacle line
         self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # TODO: MAGIC NUMBER!!! OMG!1!1!!
-        self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -500, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        #self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -800, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
 
         self.addSequential(self._approach_commands)
 
