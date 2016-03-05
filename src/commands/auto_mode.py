@@ -98,6 +98,7 @@ class AutoCommandGroup(CommandGroup):
         self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._distance_to_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # TODO: MAGIC NUMBER!!! OMG!1!1!!
         self._approach_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -500, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+
         self.addSequential(self._approach_commands)
 
     def add_cross_commands(self):
