@@ -41,7 +41,7 @@ class TurnTime(Command):
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
         # If elapsed time is more than duration
-        return self._stopwatch.elapsed_time_in_secs() >= self._duration
+        return self._stopwatch.elapsed_time_in_secs() >= self._duration or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""

@@ -11,7 +11,7 @@ class DriveEncoderCounts(Command):
     _target_position = None
     _ramp_threshold = None
 
-    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=10):
+    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=None):
         '''
         Constructor
         '''
@@ -53,7 +53,7 @@ class DriveEncoderCounts(Command):
         # Get encoder count
         current = self.robot.drivetrain.get_encoder_value()
         # If abs(target - current) < threshold then return true
-        return math.fabs(self._target_position - current) <= self._encoder_threshold
+        return math.fabs(self._target_position - current) <= self._encoder_threshold or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""

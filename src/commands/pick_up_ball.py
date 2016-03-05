@@ -27,7 +27,7 @@ class PickUpBall(Command):
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return self.robot.feeder.hasBall()
+        return self.robot.feeder.hasBall()  or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""

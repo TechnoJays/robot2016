@@ -27,7 +27,7 @@ class RetractHookToCount(Command):
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return self._robot.arm.get_encoder_value() <= self._stop_count
+        return self._robot.arm.get_encoder_value() <= self._stop_count or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""

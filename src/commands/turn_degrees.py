@@ -50,7 +50,7 @@ class TurnDegrees(Command):
         """Returns true when the Command no longer needs to be run"""
         current = self.robot.drivetrain.get_gyro_angle()
         # If abs(target - current) < threshold then return true
-        return math.fabs(self._target_degrees - current) <= self._degree_threshold
+        return math.fabs(self._target_degrees - current) <= self._degree_threshold or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""
