@@ -9,9 +9,8 @@ class TurnTime(Command):
     _start_time = None
     _duration = None
     _speed = None
-    _ramp_threshold = None
 
-    def __init__(self, robot, duration, speed, ramp_threshold, name=None, timeout=15):
+    def __init__(self, robot, duration, speed, name=None, timeout=15):
         '''
         Constructor
         '''
@@ -21,7 +20,6 @@ class TurnTime(Command):
         self._stopwatch = Stopwatch()
         self._duration = duration
         self._speed = speed
-        self._ramp_threshold = ramp_threshold
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -33,8 +31,6 @@ class TurnTime(Command):
         """Called repeatedly when this Command is scheduled to run"""
         speed = self._speed
         time_left = self._duration - self._stopwatch.elapsed_time_in_secs()
-        if (time_left < self._ramp_threshold):
-            speed = speed * time_left / self._ramp_threshold
         self.robot.drivetrain.arcade_drive(0.0, speed)
         return Command.execute(self)
 

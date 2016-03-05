@@ -8,9 +8,8 @@ class TurnDegreesAbsolute(Command):
     _speed = None
     _degree_threshold = None
     _target_degrees = None
-    _ramp_threshold = None
 
-    def __init__(self, robot, degrees_target, speed, threshold, ramp_threshold, name=None, timeout=15):
+    def __init__(self, robot, degrees_target, speed, threshold, name=None, timeout=15):
         '''
         Constructor
         '''
@@ -20,7 +19,6 @@ class TurnDegreesAbsolute(Command):
         self._target_degrees = degrees_target
         self._speed = speed
         self._degree_threshold = threshold
-        self._ramp_threshold = ramp_threshold
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -35,8 +33,6 @@ class TurnDegreesAbsolute(Command):
         else:
             direction = -1.0
         turn_speed = self._speed * direction
-        if (degrees_left < self._ramp_threshold):
-            turn_speed = turn_speed * (degrees_left) / self._ramp_threshold
         # Set drivetrain using speed and direction
         self.robot.drivetrain.arcade_drive(0.0, turn_speed)
         return Command.execute(self)

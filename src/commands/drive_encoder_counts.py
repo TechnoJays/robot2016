@@ -9,9 +9,8 @@ class DriveEncoderCounts(Command):
     _encoder_threshold = None
     _encoder_change = None
     _target_position = None
-    _ramp_threshold = None
 
-    def __init__(self, robot, encoder_change, speed, threshold, ramp_threshold, name=None, timeout=15):
+    def __init__(self, robot, encoder_change, speed, threshold, name=None, timeout=15):
         '''
         Constructor
         '''
@@ -21,7 +20,6 @@ class DriveEncoderCounts(Command):
         self._encoder_change = encoder_change
         self._speed = speed
         self._encoder_threshold = threshold
-        self._ramp_threshold = ramp_threshold
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -42,8 +40,6 @@ class DriveEncoderCounts(Command):
         else:
             direction = 1.0
         linear_drive_amount = self._speed * direction
-        if (distance_left < self._ramp_threshold):
-            linear_drive_amount = linear_drive_amount * (distance_left) / self._ramp_threshold
         # Set drivetrain using speed and direction
         self.robot.drivetrain.arcade_drive(linear_drive_amount, 0.0)
         return Command.execute(self)
