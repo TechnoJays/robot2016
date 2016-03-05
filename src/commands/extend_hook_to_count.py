@@ -7,7 +7,7 @@ from wpilib.command.command import Command
 
 class ExtendHookToCount(Command):
     
-    def __init__(self, robot, extend_speed, raise_stop_count, name=None, timeout=None):
+    def __init__(self, robot, extend_speed, raise_stop_count, name=None, timeout=15):
         '''
         Constructor
         '''

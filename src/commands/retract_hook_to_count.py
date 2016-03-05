@@ -7,7 +7,7 @@ from wpilib.command.command import Command
 
 class RetractHookToCount(Command):
 
-    def __init__(self, robot, speed_ratio, stop_count = 0, name=None, timeout=None):
+    def __init__(self, robot, speed_ratio, stop_count = 0, name=None, timeout=15):
         '''
         Constructor
         '''

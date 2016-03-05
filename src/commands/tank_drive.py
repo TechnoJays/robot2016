@@ -16,7 +16,7 @@ class TankDrive(Command):
     _config = None
     DPAD_LINEAR_SPEED = 0.75
 
-    def __init__(self, robot, name=None, timeout=None):
+    def __init__(self, robot, name=None, timeout=15):
         '''
         Constructor
         '''

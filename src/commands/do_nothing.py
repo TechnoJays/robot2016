@@ -8,7 +8,7 @@ from wpilib.command.command import Command
 
 class DoNothing(Command):
     
-    def __init__(self, robot, name=None, timeout=None):
+    def __init__(self, robot, name=None, timeout=15):
         '''
         Constructor
         '''

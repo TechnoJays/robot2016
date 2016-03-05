@@ -8,7 +8,7 @@ from stopwatch import Stopwatch
 
 class RaisArmTime(Command):
 
-    def __init__(self, robot, raise_speed, stop_time, name=None, timeout=None):
+    def __init__(self, robot, raise_speed, stop_time, name=None, timeout=15):
         '''
         Constructor
         '''

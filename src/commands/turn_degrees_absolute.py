@@ -10,7 +10,7 @@ class TurnDegreesAbsolute(Command):
     _target_degrees = None
     _ramp_threshold = None
 
-    def __init__(self, robot, degrees_target, speed, threshold, ramp_threshold, name=None, timeout=None):
+    def __init__(self, robot, degrees_target, speed, threshold, ramp_threshold, name=None, timeout=15):
         '''
         Constructor
         '''

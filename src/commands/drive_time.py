@@ -11,7 +11,7 @@ class DriveTime(Command):
     _speed = None
     _ramp_threshold = None
 
-    def __init__(self, robot, duration, speed, ramp_threshold, name=None, timeout=None):
+    def __init__(self, robot, duration, speed, ramp_threshold, name=None, timeout=15):
         '''
         Constructor
         '''
