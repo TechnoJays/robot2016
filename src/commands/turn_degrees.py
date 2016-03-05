@@ -11,7 +11,7 @@ class TurnDegrees(Command):
     _target_degrees = None
     _ramp_threshold = None
 
-    def __init__(self, robot, degrees_change, speed, threshold, ramp_threshold, name=None, timeout=None):
+    def __init__(self, robot, degrees_change, speed, threshold, ramp_threshold, name=None, timeout=15):
         '''
         Constructor
         '''

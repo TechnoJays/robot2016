@@ -10,7 +10,7 @@ from oi import JoystickAxis, UserController
 
 class FeedBallAnalog(Command):
 
-    def __init__(self, robot, max_speed, name=None, timeout=None):
+    def __init__(self, robot, max_speed, name=None, timeout=15):
         '''
         Constructor
         '''

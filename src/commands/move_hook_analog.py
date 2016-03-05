@@ -10,7 +10,7 @@ from oi import UserController, JoystickAxis
 
 class MoveHookAnalog(Command):
 
-    def __init__(self, robot, lower_stop_count, raise_stop_count = 0, name=None, timeout=None):
+    def __init__(self, robot, lower_stop_count, raise_stop_count = 0, name=None, timeout=15):
         '''
         Constructor
         '''

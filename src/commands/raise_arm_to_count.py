@@ -8,7 +8,7 @@ from wpilib.command.command import Command
 
 class RaiseArmToCount(Command):
 
-    def __init__(self, robot, raise_speed, stop_count = 0, name=None, timeout=None):
+    def __init__(self, robot, raise_speed, stop_count = 0, name=None, timeout=15):
         '''
         Constructor
         '''

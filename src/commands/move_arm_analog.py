@@ -9,7 +9,7 @@ from oi import UserController, JoystickAxis
 
 class MoveArmAnalog(Command):
 
-    def __init__(self, robot, speed_scaling_factor, back_drive_speed, back_drive_limit, raise_stop_count, name=None, timeout=None):
+    def __init__(self, robot, speed_scaling_factor, back_drive_speed, back_drive_limit, raise_stop_count, name=None, timeout=15):
         '''
         Constructor
         '''
