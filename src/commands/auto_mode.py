@@ -74,8 +74,8 @@ class AutoCommandGroup(CommandGroup):
             self._obstacle_direction = 0
         self.add_approach_commands()
         self.add_cross_commands()
-        self.add_score_commands()
-        self.add_return_commands()
+        #self.add_score_commands()
+        #self.add_return_commands()
 
     def add_approach_commands(self):
         # lower arm
@@ -106,6 +106,8 @@ class AutoCommandGroup(CommandGroup):
         self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._cross_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # re-center
         self._cross_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        
+        self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 1000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._cross_commands)
 
     def add_score_commands(self):
@@ -119,7 +121,7 @@ class AutoCommandGroup(CommandGroup):
             # self._score_commands.addSequential(turn_degrees.TurnDegrees(self._robot, angle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
             # drive to the target point along hyp
             # MAGIC NUMBERS
-            self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 2000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+            self._score_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 1000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
             # assuming 45 is the angle of the goal relative to the back wall?
             if (self._target_obstacle == 1):
                 # turned [angle] toward goal, turn remainder of 45
@@ -166,7 +168,7 @@ class AutoCommandGroup(CommandGroup):
             # MAGIC NUMBERS
             self._return_commands.addSequential(turn_degrees.TurnDegrees(self._robot, -135, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         # drive to obstacles
-        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -2300, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        self._return_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, -500, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._return_commands)
 
     def _init_commands(self):
