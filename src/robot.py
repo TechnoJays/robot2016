@@ -2,6 +2,7 @@ from wpilib import command
 import wpilib
 
 from commands.do_nothing import DoNothing
+from commands.drive_encoder_counts import DriveEncoderCounts
 from oi import OI
 from subsystems.arm import Arm
 from subsystems.drivetrain import Drivetrain
@@ -26,7 +27,8 @@ class MyRobot(wpilib.IterativeRobot):
             return_obs = self.oi.get_obstacles("Return_Obstacle")
             self.autonomous_command.set_match_configuration(start_obs, target_obs, return_obs)
         else:
-            self.autonomous_command = DoNothing(self)
+            #self.autonomous_command = DoNothing(self)
+            self.autonomous_command = DriveEncoderCounts(self, 500, 0.7, 10)
         self.autonomous_command.start()
 
     def testInit(self):

@@ -107,8 +107,16 @@ class AutoCommandGroup(CommandGroup):
         # re-center
         self._cross_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         
-        self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 1000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        #self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._cross_obstacle * -1, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        
+        #self._cross_commands.addSequential(turn_degrees_absolute.TurnDegreesAbsolute(self._robot, 0, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+        
+        #self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, self._cross_obstacle, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
+
+        #self._cross_commands.addSequential(drive_encoder_counts.DriveEncoderCounts(self._robot, 1000, self._auto_speed, self._drivetrain_threshold), self._default_timeout)
         self.addSequential(self._cross_commands)
+
+
 
     def add_score_commands(self):
         # angle of hyp/adj
